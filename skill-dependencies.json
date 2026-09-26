@@ -1,0 +1,25 @@
+{
+  "schema_version": "1.0",
+  "skill": {
+    "name": "archebase-visual-design",
+    "version": "1.1.0",
+    "role": "design-method application layer"
+  },
+  "dependencies": [
+    {
+      "name": "archebase-vi-guide",
+      "repository": "https://github.com/archebase/archebase-vi-guide",
+      "tag": "v3.5.4",
+      "commit": "918d0ec8f05f775d1f34370e0c38fc796da8b83b",
+      "required": true,
+      "authority": "brand facts, official assets, evidence, tokens, route playbooks and release gates",
+      "resolution": "Install or clone from the GitHub repository. A local filesystem checkout is a cache, not the canonical identity.",
+      "update_policy": "Do not float to main. Update tag/commit only after running upstream validators/evals and the visual-design regression suite."
+    }
+  ],
+  "non_goals": [
+    "Do not copy the VI skill into this repository.",
+    "Do not vendor VI tokens, evidence, logos, validators or release gates.",
+    "Do not reconstruct brand facts from local PDFs, CSS, marketing material or memory."
+  ]
+}

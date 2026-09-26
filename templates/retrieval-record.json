@@ -1,0 +1,23 @@
+{
+  "query_text": "",
+  "query_ir_fields": {
+    "content_goal": {},
+    "features": {},
+    "hard_constraints": [],
+    "allowed_exploration": []
+  },
+  "corpus_version": "",
+  "embedding_model": {
+    "id": "",
+    "version": "",
+    "mode": "dense | multi_vector | lexical",
+    "dimensions": null
+  },
+  "candidate_ids": [],
+  "candidates": [],
+  "filters": {"hard_passed": [], "hard_rejected": []},
+  "selected_reason": "",
+  "rejected_reason": "",
+  "provenance": [],
+  "human_approval": {"status": "pending", "reviewer": "", "date": ""}
+}

@@ -1,0 +1,72 @@
+# Design IR 示例
+
+ir_version: "1.0.0"
+record:
+  id: "concept:archebase:data-spine:v1"
+  type: "concept"
+  status: "proposed"
+  revision: 1
+brief:
+  content_contract: "为 Physical AI 工程负责人说明数据基础设施如何连接物理世界与智能行动。"
+  requirements:
+    - id: "req:audience"
+      kind: "audience"
+      value: "Physical AI 工程负责人"
+      origin: "user_explicit"
+      required: true
+    - id: "req:message"
+      kind: "message"
+      value: "高保真数据连接物理世界与智能行动"
+      origin: "user_explicit"
+      required: true
+design:
+  medium:
+    channel: "wechat_cover"
+    color_space: "sRGB"
+  visual_proposition: "分散的物理信号沿受控数据脊柱汇聚为可验证、可行动的结构。"
+  hierarchy:
+    - role: "headline"
+      priority: 1
+      content_ref: "copy:headline"
+    - role: "evidence"
+      priority: 2
+      content_ref: "claim:high-fidelity-data"
+  grid:
+    type: "modular"
+    columns: 12
+    margin_norm: 0.055
+    gutter_norm: 0.018
+  elements:
+    - id: "el:spine"
+      kind: "shape"
+      semantic_role: "data_spine"
+      bbox_norm: [0.48, 0.08, 0.04, 0.84]
+      appearance:
+        fill: "#0032FF"
+  reading_path:
+    nodes: ["copy:headline", "el:spine", "claim:high-fidelity-data"]
+  patterns: ["data_spine", "coordinate_field"]
+j_space:
+  coordinates:
+    structural_stability: 0.84
+    flow_dynamism: 0.58
+    whitespace: 0.67
+    physical_literalness: 0.42
+  uncertainty:
+    physical_literalness: {min: 0.30, max: 0.55, confidence: 0.46}
+constraints:
+  - id: "constraint:no-orange-cta"
+    severity: "hard"
+    rule_id: "brand:no-orange-cta"
+    source: "official_vi"
+    operator: "not_contains_color_role"
+    value: {color_family: "orange", role: "cta"}
+provenance:
+  sources: ["src:vi-guide", "src:approved-brief"]
+  evidence_level: "proposed"
+validation:
+  gates: {facts: "pending", hierarchy: "pending", brand: "pending", production: "pending"}
+embedding_ref:
+  model: null
+  model_version: null
+  index_id: null
