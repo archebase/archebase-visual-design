@@ -1,5 +1,8 @@
 # Internal application-layer skill
 
-This repository is currently intended for internal ArcheBase use. No public redistribution license is granted by this file.
+This repository is intended for internal ArcheBase use. No public redistribution license is granted by this file.
 
-The upstream ArcheBase VI Guide dependency is proprietary and separately governed.
+Rights caveats:
+
+- Third-party design-source permissions are handled outside this repository; the rules in `references/` are synthesized method guidance, not reproductions of source text.
+- The upstream ArcheBase VI Guide dependency is proprietary and separately governed.

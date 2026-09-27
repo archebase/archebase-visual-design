@@ -1,45 +1,46 @@
 # ArcheBase Visual Design Skill
 
-This repository contains the design-method application layer for ArcheBase / 智域基石.
-
-It combines:
-
-- graphic and visual design methods distilled from authorized or openly licensed sources;
-- explainable Design IR and J-space exploration;
-- layout, typography, information-design, accessibility and production workflows;
-- deterministic decision and delivery templates.
+Design-method application layer for ArcheBase / 智域基石. `SKILL.md` is authoritative for agent behaviour; this README is the repository-level orientation only and no agent rule lives here alone.
 
 ## Dependency
 
-Official ArcheBase brand facts, assets, evidence, tokens, route playbooks and release gates remain in the upstream VI skill:
+Official brand facts, assets, evidence, tokens, route playbooks, validators and release gates stay upstream:
 
 - Repository: https://github.com/archebase/archebase-vi-guide
-- Baseline: `v3.5.4`
-- Commit: `918d0ec8f05f775d1f34370e0c38fc796da8b83b`
+- Baseline: tag `v3.5.4`, commit `918d0ec8f05f775d1f34370e0c38fc796da8b83b`
 
-This repository does **not** copy or redistribute the upstream VI assets or evidence. Resolve the upstream skill before claiming formal VI compliance.
+Resolve it with `git clone --branch v3.5.4 https://github.com/archebase/archebase-vi-guide` and verify `git -C archebase-vi-guide rev-parse HEAD` against the commit above. This repository does not copy or redistribute upstream VI assets or evidence, and it is not itself a brand authority.
+
+Other declared dependencies are listed in `skill-dependencies.json`.
 
 ## Scope
 
-This repository is the application layer. It does not contain:
-
-- the official VI PDF, CSS, tokens, logo assets or evidence register;
-- internal contracts, HR, finance, legal, sales or operations documents;
-- complete third-party books or raw copyrighted source text.
+This repository is the application layer. It does not contain the official VI PDF, CSS, tokens, logo assets or evidence register, and it does not contain internal contracts, HR, finance, legal, sales or operations documents.
 
 ## Layout
 
 ```text
-SKILL.md
-references/     design methods and application guidance
-templates/      briefs, decision records, Design IR and retrieval records
-skill-dependencies.json
+SKILL.md                agent-facing contract: triggers, boundary, workflow, gates
+references/             design methods, brand restatement, source boundaries
+templates/              briefs, IR records, retrieval/candidate records, spec, decision trace
+evals/                  runnable regression + brand-fact checker, and an unexecuted A/B protocol
+skill-dependencies.json pinned dependencies and non-goals
+NOTICE.md  LICENSE      notices and licence (internal use)
 ```
 
-## Use
+## Checks
 
-Load `SKILL.md` through an Agent Skills-compatible loader. For official brand decisions, load the pinned upstream `archebase-vi-guide` first. For design-method work, load the relevant reference files progressively rather than loading the entire directory.
+```sh
+python3 evals/check_brand_facts.py          # restated brand facts vs the pinned upstream
+python3 evals/run_visual_design_benchmark.py # retrieval and design-space regression
+```
+
+Both read `ARCHEBASE_VI_GUIDE` / `ARCHEBASE_DESIGN_IR`, falling back to sibling directories, and report `待确认` instead of silently passing when a dependency is unreachable.
+
+### Renderer warning
+
+The gradient logo SVGs use multiple stops with `stop-opacity`; ImageMagick's internal SVG renderer renders them incorrectly (darker, partially flattened). Use `rsvg-convert` or a browser engine, or the bundled PNG. Never use `magick file.svg` for a logo.
 
 ## Status
 
-This is an internal application-layer skill. Publication visibility, repository license and upstream dependency access must be decided before pushing to GitHub.
+Internal application-layer skill. Publication visibility, repository licence and upstream dependency access are decided by the brand owner.

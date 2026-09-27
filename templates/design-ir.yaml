@@ -1,72 +1,100 @@
-# Design IR 示例
+# Design IR 单条记录模板（可填入；示例值为 ArcheBase 公众号头图场景）
+#
+# 结构权威：Design IR store 自带的 `design-ir-schema.yaml`。本文件顶层键与该 schema 顶层键一致，
+#   `record` 的键集合与该 schema 的 `record` 键集合一致；不引入自造字段。
+# store 定位：按 `../references/design-ir-and-j-space.md` 的解析规则
+#   （`ARCHEBASE_DESIGN_IR` → Skill 同级 `archebase-design-ir` → 停止并记 `待确认`），不得硬编码本机路径。
+# 品牌事实：本文件不复述色值与字体参数，只写角色；唯一权威见 `../references/brand-system.md`。
+# 来源：`record.source.*` 记录来源与定位；`license` 只是输入元数据，不构成授权判定。
+#
+# 入索引：store 的 `build_index.py` 读 `records.jsonl`（每行一条扁平记录）写 `records` 表，12 个 NOT NULL 列为
+#   id, kind, title, text, tags_json, channel_scope_json, status, evidence_level, source_id, locator, license,
+#   hard_constraints_json。record → 列 的映射（括号内为索引列，不是 schema 字段）：
+#   id / kind / status                             ← record.id / record.kind / record.status
+#   title（索引列：检索标题，自拟）                   ← schema 无对应字段，入索引时补
+#   text                                            ← record.visual_claim 与 record.features 各字段的连接文本
+#   tags_json（关键词）/ channel_scope_json          ← 母题特征词 / [record.features.channel]
+#   evidence_level / source_id / locator / license   ← record.source.*
+#   hard_constraints_json                            ← record.conditions + record.anti_patterns
+#
+# kind 枚举：schema 为 brief / rule / case / asset / critique / constraint / concept；
+#   本模板额外允许 anti_pattern，依据是已上线的 store 记录 `anti:generic:cyberpunk`（kind=anti_pattern），
+#   且 `jspace.py` 的 `--exclude-kind` 默认排除 anti_pattern。
 
-ir_version: "1.0.0"
+version: "0.1"
+name: archebase-design-ir
+purpose: "Explainable intermediate representation for ArcheBase visual design retrieval and J-space navigation"
+
 record:
-  id: "concept:archebase:data-spine:v1"
-  type: "concept"
-  status: "proposed"
-  revision: 1
-brief:
-  content_contract: "为 Physical AI 工程负责人说明数据基础设施如何连接物理世界与智能行动。"
-  requirements:
-    - id: "req:audience"
-      kind: "audience"
-      value: "Physical AI 工程负责人"
-      origin: "user_explicit"
-      required: true
-    - id: "req:message"
-      kind: "message"
-      value: "高保真数据连接物理世界与智能行动"
-      origin: "user_explicit"
-      required: true
-design:
-  medium:
+  id: "concept:archebase:data-spine:wechat-cover:v1"
+  kind: concept
+  content_goal:
+    audience: "Physical AI 工程负责人"
+    task: "判断数据基础设施如何把物理世界转成可验证的数据"
+    action: "把该数据链路纳入自己的技术方案评估"
+  visual_claim: "分散的物理信号沿受控数据脊柱汇聚为可验证、可行动的结构。"
+  features:
+    layout: "纵向主轴居中偏左，右侧为非对称证据区"
+    grid: "模块网格；主轴只占一列宽"
+    hierarchy: "主标题 → 数据脊柱 → 证据或数据 → 来源与 CTA"
+    # 字样与字重（上游 `tokens/archebase.tokens.json` 的 `type`；Guide pp.6/10/14/26；evidence `typography.specimens`；
+    # 精确生产文件与授权待确认；重述见 `../references/brand-system.md`）
+    typography: "中文标题用已确认中文字样的粗黑字重；中文正文用黑字重；数字与短标签用已确认拉丁字样的 SemiBold"
+    # 只写颜色角色，不写 hex；token 与色值见 `../references/brand-system.md`（上游 `tokens/archebase.tokens.json`；
+    # `references/visual-grammar.md:5-8`）
+    color: "结构用中性色与阅读表面；主轴用主品牌蓝；节点与信号用高亮蓝"
+    imagery: "真实设备与环境局部、工程标注、可验证的数据图；不用泛化 AI 意象"
+    density: "中低密度，单一焦点"
+    motion: "无动效（静态长图）"
     channel: "wechat_cover"
-    color_space: "sRGB"
-  visual_proposition: "分散的物理信号沿受控数据脊柱汇聚为可验证、可行动的结构。"
-  hierarchy:
-    - role: "headline"
-      priority: 1
-      content_ref: "copy:headline"
-    - role: "evidence"
-      priority: 2
-      content_ref: "claim:high-fidelity-data"
-  grid:
-    type: "modular"
-    columns: 12
-    margin_norm: 0.055
-    gutter_norm: 0.018
-  elements:
-    - id: "el:spine"
-      kind: "shape"
-      semantic_role: "data_spine"
-      bbox_norm: [0.48, 0.08, 0.04, 0.84]
-      appearance:
-        fill: "#0032FF"
-  reading_path:
-    nodes: ["copy:headline", "el:spine", "claim:high-fidelity-data"]
-  patterns: ["data_spine", "coordinate_field"]
-j_space:
-  coordinates:
-    structural_stability: 0.84
-    flow_dynamism: 0.58
-    whitespace: 0.67
-    physical_literalness: 0.42
-  uncertainty:
-    physical_literalness: {min: 0.30, max: 0.55, confidence: 0.46}
-constraints:
-  - id: "constraint:no-orange-cta"
-    severity: "hard"
-    rule_id: "brand:no-orange-cta"
-    source: "official_vi"
-    operator: "not_contains_color_role"
-    value: {color_family: "orange", role: "cta"}
-provenance:
-  sources: ["src:vi-guide", "src:approved-brief"]
-  evidence_level: "proposed"
-validation:
-  gates: {facts: "pending", hierarchy: "pending", brand: "pending", production: "pending"}
-embedding_ref:
-  model: null
-  model_version: null
-  index_id: null
+  relations:
+    - type: derived_from
+      target_id: "rule:brand:palette"
+    - type: requires
+      target_id: "rule:grid:modular"
+    - type: contrasts
+      target_id: "case:fluid:signal"
+  scope: "ArcheBase 公众号头图，仅 wechat_cover 比例"
+  brand: [archebase-vi-guide]
+  application: [archebase-visual-design]
+  excludes: [contracts, HR, finance, legal, operations, sales, unrelated_internal_documents]
+  source:
+    source_id: "src:archebase-vi-github"
+    locator: "archebase/archebase-vi-guide@918d0ec8f05f775d1f34370e0c38fc796da8b83b references/visual-grammar.md"
+    license: "proprietary"
+    evidence_level: proposed
+  conditions:
+    - "仅在 features.channel 声明的渠道内适用；换渠道需重新过质量门"
+    - "色值只允许 `../references/brand-system.md` 已确认的品牌 token；浅色或白色表面是应用默认，不是品牌 token，不进入精确色值门（上游 `tokens/archebase.tokens.json`）"
+  anti_patterns:
+    - "泛化 AI 母题：发光大脑、随机电路板、二进制雨、伪仪表盘（见 `../references/brand-system.md` 禁止项）"
+    - "用低对比辅助蓝承接白底小字（见 `../references/critique-checklist.md` Gate C）"
+  validation:
+    methods: ["`../references/critique-checklist.md` 的六道质量门（Gate A–F）", "validate_candidate.py", "preflight.py", "实际尺寸与灰度检查"]
+    result: proposed
+  embedding_ref:
+    # 未生成 embedding 时为 null；一旦入索引必须回填真实值，禁止静默混用模型版本
+    model_id: null
+    model_version: null
+    modality: text
+    dimension: null
+    normalized: true
+    index_id: null
+  status: proposed
+  created_at: "2026-09-27T12:00:00Z"
+  updated_at: "2026-09-27T12:00:00Z"
+
+# ── J-space 坐标不写入本记录 ────────────────────────────────────────────────────
+# 坐标层存在 store 的 `axes.json` 的 `coordinates[<record id>]`，由 `validate_jspace.py` 校验
+# （六个轴齐全、数值有限、在 [-1,1] 内）。轴 ID 固定为 axes.json 的六个：
+# structural_stability / density / physical_literalness / processuality / literalness / expressiveness
+# （`jspace.py` 拒绝未知轴）。标注记录格式见 store 的 `JSPACE-CALIBRATION.md`：
+# uncertainty 与 evidence 都是「按轴一个标量 / 一条说明」，不是 min-max-confidence 区间。
+# 该格式的伴生条目（坐标仍存 axes.json，不存本文件）：
+# {"record_id": "concept:archebase:data-spine:wechat-cover:v1",
+#  "reviewer_id": "reviewer-01",
+#  "scores": {"structural_stability": 0.45, "density": -0.10, "physical_literalness": 0.35,
+#             "processuality": 0.55, "literalness": -0.30, "expressiveness": 0.10},
+#  "uncertainty": {"physical_literalness": 0.2},
+#  "evidence": {"physical_literalness": "主元素为真实设备与现场局部"},
+#  "notes": ""}

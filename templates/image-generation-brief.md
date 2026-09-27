@@ -13,20 +13,25 @@ Visual language:
 stable modular foundation, coordinate field, controlled data flow,
 precise engineering annotations, transition from physical complexity
 to structured intelligence
+(skill-defined design motifs, not VI text — see references/brand-system.md)
 
 Palette:
-#0032FF, #7172FA, #619AFD, #46CFFF, #1E2124, #FFFFFF only
+Use only the five approved brand tokens defined in references/brand-system.md
+(`AB_BLUE_1` primary structure, `AB_BLUE_2` supporting hierarchy, `AB_BLUE_3` secondary data layer,
+`AB_BLUE_4` meaningful highlight / data flow, `AB_CHARCOAL` technical dark field and neutral text).
+White or light surface is an application default, not a brand token. Add no color outside these five.
 
 Typography:
 Do not render final body copy inside the image unless explicitly required.
-Reserve clean space for Source Han Sans SC and Poppins typography.
+Reserve clean space for the confirmed brand type — Chinese 思源黑体 and Latin Poppins —
+per references/brand-system.md.
 
 Material and atmosphere:
 precise, physical, engineered, trustworthy, restrained; real spatial depth
 created through density, scale, overlap, cropping and measured line systems
 
 Avoid:
-orange accents, glowing brains, generic holographic interfaces,
+glowing brains, generic holographic interfaces,
 random binary code, cyberpunk neon, decorative circuit boards,
 unverifiable dashboards, excessive particles, uncontrolled gradients,
 generic humanoid robot touching a transparent screen

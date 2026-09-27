@@ -1,5 +1,5 @@
 {
-  "schema_version": "1.0",
+  "schema_version": "1.1",
   "skill": {
     "name": "archebase-visual-design",
     "version": "1.1.0",
@@ -13,13 +13,35 @@
       "commit": "918d0ec8f05f775d1f34370e0c38fc796da8b83b",
       "required": true,
       "authority": "brand facts, official assets, evidence, tokens, route playbooks and release gates",
-      "resolution": "Install or clone from the GitHub repository. A local filesystem checkout is a cache, not the canonical identity.",
-      "update_policy": "Do not float to main. Update tag/commit only after running upstream validators/evals and the visual-design regression suite."
+      "resolution": "Install or clone from the GitHub repository with --branch v3.5.4 and verify rev-parse HEAD against the pinned commit. A local filesystem checkout is a cache, not the canonical identity.",
+      "update_policy": "Do not float to main. Update tag/commit only after running the nine upstream validators named in SKILL.md plus evals/check_brand_facts.py and evals/run_visual_design_benchmark.py."
+    },
+    {
+      "name": "archebase-wechat-layout",
+      "repository": "https://github.com/archebase/archebase-wechat-layout",
+      "tag": null,
+      "commit": "37f9b0bb3a289950c1e0be49d00c7d6138da9a9d",
+      "required": false,
+      "authority": "channel implementation for the WeChat layout rules in references/channel-wechat.md only; never a brand authority",
+      "resolution": "Clone from the GitHub repository and check out the pinned commit. The repository has no tags yet, so the commit is the only pinnable identity.",
+      "update_policy": "Re-verify every rule in references/channel-wechat.md against assets/archebase-wechat-safe.css before advancing the commit."
+    },
+    {
+      "name": "design-ir-store",
+      "repository": null,
+      "tag": null,
+      "commit": null,
+      "required": false,
+      "authority": "derived retrieval corpus and design-space tooling only; its records are not VI evidence and must never be cited as brand authority",
+      "resolution": "Resolve from the environment variable ARCHEBASE_DESIGN_IR, else from the sibling directory ../archebase-design-ir relative to this skill. If unreachable, stop the Design IR route and record 待确认.",
+      "identity_gap": "The store currently has no repository identity or remote (待确认); until it does, treat it as a machine-local cache and never as a source of truth.",
+      "update_policy": "Regenerate the index (build_index.py) after any record change, then re-run evals/run_visual_design_benchmark.py."
     }
   ],
   "non_goals": [
     "Do not copy the VI skill into this repository.",
     "Do not vendor VI tokens, evidence, logos, validators or release gates.",
-    "Do not reconstruct brand facts from local PDFs, CSS, marketing material or memory."
+    "Do not reconstruct brand facts from local PDFs, CSS, marketing material or memory.",
+    "Do not treat the Design IR store, its annotations or its embeddings as brand authority."
   ]
 }

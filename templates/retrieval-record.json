@@ -1,23 +1,30 @@
 {
-  "query_text": "",
-  "query_ir_fields": {
-    "content_goal": {},
-    "features": {},
-    "hard_constraints": [],
-    "allowed_exploration": []
+  "_producers": {
+    "说明": "本文件记录一次检索运行的原始输出加逐候选决策；下表标明每一部分的产生者，避免把工具不产生的字段当成工具输出。",
+    "store": "Design IR store。定位规则见 references/design-ir-and-j-space.md：环境变量 `ARCHEBASE_DESIGN_IR` → Skill 同级目录 `archebase-design-ir` → 都不可达时停止该路由并记 `待确认`。",
+    "query.py": "产生 `query`、`channel`、`count` 与 `results[]` 的 `id`、`kind`、`title`、`score`、`matched_tags`、`source{source_id,locator,license}`、`why_retrieved`；按 `--channel` 与 `--limit` 过滤。硬拒绝候选（渠道不在 `channel_scope`、`status` 为 `rejected`/`superseded`）被静默丢弃，不会出现在结果里，因此本文件不设硬拒绝清单槽位；需要解释某个候选为何不可用时，用 `decision: reject` 加 `reason` 记录。",
+    "人工决策": "`results[].decision` 与 `results[].reason` 由设计者或 agent 填写，任何工具都不产生。",
+    "jspace.py": "J-space 导航输出形状不同（`axis`、`target`、`results[].id/title/kind/distance/coordinates/source`、`count`），不写入本文件；轴坐标记入 store 的 `axes.json` 的 `coordinates`，标注格式见 `JSPACE-CALIBRATION.md`。",
+    "validate_candidate.py": "候选预交付硬门。其输入与结果记入 templates/candidate-record.json，不写入本文件。"
   },
-  "corpus_version": "",
-  "embedding_model": {
-    "id": "",
-    "version": "",
-    "mode": "dense | multi_vector | lexical",
-    "dimensions": null
-  },
-  "candidate_ids": [],
-  "candidates": [],
-  "filters": {"hard_passed": [], "hard_rejected": []},
-  "selected_reason": "",
-  "rejected_reason": "",
-  "provenance": [],
-  "human_approval": {"status": "pending", "reviewer": "", "date": ""}
+  "query": "",
+  "channel": "",
+  "count": 0,
+  "results": [
+    {
+      "id": "",
+      "kind": "",
+      "title": "",
+      "score": 0.0,
+      "matched_tags": [],
+      "source": {
+        "source_id": "",
+        "locator": "",
+        "license": ""
+      },
+      "why_retrieved": "",
+      "decision": "accept | reject | defer",
+      "reason": ""
+    }
+  ]
 }

@@ -16,6 +16,8 @@
 
 ## 中英文
 
+字体角色与可用字重由 [brand-system.md](brand-system.md) 定义（上游 `tokens/archebase.tokens.json`；Guide pp.6/10/14/26，evidence `typography.specimens`）；本文件只规定混排执行。
+
 - 中文正文优先 Source Han Sans SC。
 - Poppins 用于英文标题、数字、短标签，不强行承担长篇中文。
 - 中英文同排时按视觉高度而非名义字号匹配。
@@ -25,7 +27,7 @@
 ## 可读性
 
 - 正文行长、行距、字重需在实际媒介测试。
-- 白底正文使用 `#1E2124`，品牌强调使用 `#0032FF`。
+- 白底正文与品牌强调的色值及角色定义以 [brand-system.md](brand-system.md) 为唯一重述处（上游 `tokens/archebase.tokens.json`）；本文件不复述色值。
 - 相关信息靠近；不相关信息用空间、规则线或背景区分。
 - 对比要果断：近似字号、近似蓝色、近似对齐容易像错误。
 - 空间是信息：边距、段距和模块间距必须形成节奏。

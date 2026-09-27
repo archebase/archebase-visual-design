@@ -1,0 +1,39 @@
+{
+  "_gate": "本文件是 store 的 validate_candidate.py 的输入（store 定位规则见 ../references/design-ir-and-j-space.md：环境变量 `ARCHEBASE_DESIGN_IR` → Skill 同级目录 `archebase-design-ir` → 都不可达时停止并记 `待确认`）。非零退出即停止交付。布尔项默认 false = 未确认，核实后才改为 true：validate_candidate.py 对 facts_verified、colors、fonts、logo、motifs、meaning_channels 报错，对 accessibility、production 报警告。colors[].value 的允许集合与角色用途见 ../references/brand-system.md（本文件不复述色值；白色/浅色阅读表面是应用默认，可在 background 槽位声明，但不是品牌 token）。fonts[].family 同时受两处约束：../references/brand-system.md 的已确认字样（中文 `思源黑体`、拉丁 `Poppins`；精确生产文件与授权待确认）与 validate_candidate.py 的批准名单（中文 `Source Han Sans SC` / `Noto Sans CJK SC` / `PingFang SC` / `Microsoft YaHei`，拉丁与数字仅 `Poppins`）；两处不一致时记 `待确认`，不得为过门而臆造字样命名。",
+  "id": "candidate:",
+  "channel": "",
+  "copy_status": "draft | approved",
+  "facts_verified": false,
+  "colors": [
+    {"value": "", "role": "background"},
+    {"value": "", "role": "brand_anchor"},
+    {"value": "", "role": "supporting"},
+    {"value": "", "role": "signal"},
+    {"value": "", "role": "body_text"},
+    {"value": "", "role": "small_text"}
+  ],
+  "fonts": [
+    {"family": "", "role": "chinese_heading"},
+    {"family": "", "role": "chinese_body"},
+    {"family": "", "role": "latin_heading"},
+    {"family": "", "role": "latin_label"},
+    {"family": "", "role": "number"}
+  ],
+  "logo": {"modified": false, "recolored": false, "distorted": false},
+  "motifs": [],
+  "meaning_channels": {
+    "status_uses_color_only": false,
+    "links_use_color_only": false
+  },
+  "accessibility": {
+    "alt_text_complete": false,
+    "real_text_for_key_copy": false,
+    "actual_size_checked": false,
+    "contrast_checked": false
+  },
+  "production": {
+    "dimensions_known": false,
+    "export_format_known": false,
+    "color_space_known": false
+  }
+}

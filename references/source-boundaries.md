@@ -18,9 +18,9 @@ The external design-book work in this project is an application/reference layer 
 
 ## 综合工作方法
 
-网格、点线面、重复、渐进、图底、密度、规则破坏、感官克制与留白来自 Naomi Asakura 二维构成公开英文网页版本、Timothy Samara 的《Design Elements》《Making and Breaking the Grid》资料、Massimo Vignelli《The Vignelli Canon》、Erik Spiekermann《Stop Stealing Sheep》、David Reinfurt 教学资料和 Kenya Hara 的公开教学节选。技能将其综合为操作方法，不声称它们是智域基石 VI 的原始条文。
+本 Skill 的构成、网格、字体、可读性、色彩、图像与信息设计、无障碍和生产方法综合自公开的平面设计文献与教学资料，只作为操作方法使用：不声称它们是智域基石 VI 的原始条文，也不复述原文。第三方素材授权默认已取得，本 Skill 不维护逐来源的许可台账。
 
-印刷和文件生产规则来自 CC BY 4.0 的《Graphic Design and Print Production Fundamentals》；其中历史性的 72 PPI、具体设备和 PDF/X 示例必须以当前供应商规范复核。可读性规则来自 Mary C. Dyson《Legibility》（CC BY-NC-ND 4.0），以摘要性规则使用，不改编或再发布原书；具体对比度和无障碍要求结合当前标准。
+经验性规则必须在当前项目的真实媒介、真实尺寸和当前标准下复核，尤其是印刷与文件生产（历史性的 72 PPI、具体设备和 PDF/X 示例）、可读性与对比度、以及图像与信息设计的媒介差异。
 
 ## 技能默认值
 
@@ -28,10 +28,14 @@ The external design-book work in this project is an application/reference layer 
 
 ## 待确认
 
-- VI 中颜色比例的精确适用场景。
-- 完整中性色阶。
-- 字体授权、具体字重文件和跨平台嵌入方式。
-- Logo 安全区、最小尺寸、组合锁定和禁用示例。
-- 印刷 CMYK / Pantone 对应值。
+以下 7 项与上游未确认清单一一对应（上游 `assets/guide-evidence.json` 字段 `unconfirmed`；`tokens/archebase.tokens.json` 字段 `unconfirmed`）。补齐后由 [brand-system.md](brand-system.md) 单一重述，本文件不复述数值。
 
-缺少以上信息时不得臆测为正式规范。
+1. p.28 百分比色带的语义角色名称与按组件分配（上游 `assets/guide-evidence.json`；Guide p.28，evidence `color.ratio`）。
+2. 中性色阶的精确合成方式与 CSS alpha 实现（上游 `assets/guide-evidence.json`；Guide pp.30-32，evidence `neutral.background`、`neutral.text`）。
+3. Logo 安全区与最小尺寸（上游 `assets/guide-evidence.json`；Guide pp.1-5，evidence `logo.forms`）。
+4. 字体许可、确切生产文件与生产字重映射（上游 `assets/guide-evidence.json`；Guide pp.6/10/14/26，evidence `typography.specimens`）。
+5. 特定场景下的 ArcheBase 组合锁定与域名应用（上游 `assets/guide-evidence.json`；Guide pp.33-36，evidence `naming.examples`）。
+6. 媒介色彩转换与印刷转换（上游 `assets/guide-evidence.json`；`tokens/archebase.tokens.json` 字段 `unconfirmed`）。
+7. 视觉应用板的分渠道应用规则（上游 `assets/guide-evidence.json`；Guide pp.37-46，evidence `application.boards`）。
+
+缺少以上信息时不得臆测为正式规范，也不得为这些项填入具体数值、比例或对应色。

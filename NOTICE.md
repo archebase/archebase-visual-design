@@ -6,8 +6,15 @@ ArcheBase brand facts, official assets, evidence, tokens, route playbooks, valid
 
 https://github.com/archebase/archebase-vi-guide
 
-This repository references that dependency but does not include or redistribute its proprietary assets.
+Pinned baseline: tag `v3.5.4`, commit `918d0ec8f05f775d1f34370e0c38fc796da8b83b`. This repository references that dependency but does not include or redistribute its proprietary assets.
+
+## Other declared dependencies
+
+See `skill-dependencies.json`:
+
+- `archebase/archebase-wechat-layout` — the channel CSS behind `references/channel-wechat.md`, pinned by commit `37f9b0bb3a289950c1e0be49d00c7d6138da9a9d`; that repository has no tags yet, so no tag can be pinned.
+- Design IR store — resolved from `ARCHEBASE_DESIGN_IR` or a sibling directory. It is a derived consumer of brand facts and is never cited as brand evidence.
 
 ## Source-derived design methods
 
-Reference files in this repository contain synthesized design-method guidance derived from the source materials recorded in the local source ledger. They are not the original books or full source texts. Source-specific license and attribution obligations must be checked before publication or redistribution.
+Reference files in this repository contain synthesized design-method guidance, not the original books or full source texts. The methods are distilled from public graphic-design literature and teaching material and are used as operational method only. Third-party permissions are handled outside this repository; no per-source licence ledger is maintained here.

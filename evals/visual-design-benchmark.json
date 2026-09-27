@@ -1,0 +1,197 @@
+{
+  "benchmark": "archebase-visual-design-direct-v0.2",
+  "skill": "archebase-visual-design",
+  "scope": "Design IR 应用层（本 Skill 的检索/设计空间路由），不是上游 VI Skill，也不做 with/without 因果对比",
+  "store": {
+    "kind": "design_ir",
+    "env": "ARCHEBASE_DESIGN_IR",
+    "sibling_fallback": "../archebase-design-ir",
+    "required_files": ["query.py", "jspace.py", "axes.json"]
+  },
+  "k_default": 5,
+  "pool_limit": 1000,
+  "metric_notes": {
+    "pool": "用极大 limit 调 query.py/jspace.py 得到的完整候选数；池 ≤ k 时该案例不能证伪，计入 integrity_failures。",
+    "hit_at_k": "正例中 expect_within_k 至少一项落在 top-k 的比例（只统计可证伪案例）。",
+    "mrr_at_k": "正例 reciprocal rank（top-k 内）均值；排序变化会改变该值。",
+    "decoy_pass_rate": "反例中 must_not_be_first 全部满足的比例。",
+    "first_rank": "该案例期望记录在 top-k 中的最好名次（1 起）；full ranking 名次另记为 first_rank_in_pool。"
+  },
+  "cases": {
+    "retrieval": [
+      {
+        "id": "retrieval-01",
+        "intent": "封面数据脊柱：Physical AI 数据基础设施的受控流动",
+        "query": "数据基础设施 数据流 脊柱 节点 信号 流动",
+        "channel": "wechat_cover",
+        "k": 5,
+        "expect_within_k": ["rule:grid:data-spine"],
+        "known_failing": false,
+        "note": "加入拉丁词 Physical AI 会让 query.py 走 FTS 路径并把池压到 1 条，故按语料语言写成中文查询。"
+      },
+      {
+        "id": "retrieval-02",
+        "intent": "报告封面：网格由内容层级决定",
+        "query": "网格 内容层级 报告封面 模块 留白 密度 信息",
+        "channel": "report",
+        "k": 5,
+        "expect_within_k": ["rule:grid:modular"],
+        "known_failing": false,
+        "note": "当前排序把 case:stable:foundation 放在 rule:grid:modular 之前，故 first_rank 预期为 2。"
+      },
+      {
+        "id": "retrieval-03",
+        "intent": "幻灯片：图像类型跟信息任务",
+        "query": "真实设备 现场 数据图 图示",
+        "channel": "slides",
+        "k": 5,
+        "expect_within_k": ["rule:image:function"],
+        "known_failing": false
+      },
+      {
+        "id": "retrieval-04",
+        "intent": "网页：语义结构、替代文本、标题层级",
+        "query": "替代文本 语义 标题 结构 无障碍 屏幕阅读器",
+        "channel": "web",
+        "k": 5,
+        "expect_within_k": ["rule:accessibility:semantic"],
+        "known_failing": false
+      },
+      {
+        "id": "retrieval-05",
+        "intent": "报告：可读性依实际尺寸与阅读距离",
+        "query": "可读性 对比度 字号 阅读 距离 环境",
+        "channel": "report",
+        "k": 5,
+        "expect_within_k": ["rule:legibility:context"],
+        "known_failing": false
+      },
+      {
+        "id": "retrieval-06",
+        "intent": "五色色板与比例查询",
+        "query": "品牌 色彩 比例 五色 色板 结构 强调",
+        "channel": "wechat_cover",
+        "k": 5,
+        "expect_within_k": ["rule:brand:palette"],
+        "known_failing": false
+      },
+      {
+        "id": "retrieval-07",
+        "intent": "字体角色与字号层级",
+        "query": "字重 字号 层级 标题 正文 数字 字体",
+        "channel": "report",
+        "k": 5,
+        "expect_within_k": ["rule:type:roles"],
+        "known_failing": false
+      },
+      {
+        "id": "retrieval-08",
+        "intent": "颜色关系与背景对比",
+        "query": "颜色 关系 感知 对比 背景 环境 场",
+        "channel": "report",
+        "k": 5,
+        "expect_within_k": ["rule:color:perception"],
+        "known_failing": false,
+        "note": "当前 rule:image:function 排在首位，故 first_rank 预期为 2。"
+      },
+      {
+        "id": "retrieval-09",
+        "intent": "稳定基石方向（case 记录，不使用 --kind 过滤）",
+        "query": "稳定 基石 模块 强网格 结构 秩序 品牌 层级",
+        "channel": "wechat_cover",
+        "k": 5,
+        "expect_within_k": ["case:stable:foundation"],
+        "known_failing": false,
+        "note": "旧案例用 --kind case 把池压到 2 条，Hit@5 无法失败；现在不使用 kind 过滤。"
+      },
+      {
+        "id": "retrieval-10",
+        "intent": "流动信号方向（case 记录，不使用 --kind 过滤）",
+        "query": "流动 信号 节点 数据 脊柱 方向 汇聚",
+        "channel": "poster",
+        "k": 5,
+        "expect_within_k": ["case:fluid:signal"],
+        "known_failing": false,
+        "note": "当前 rule:grid:data-spine 排在首位，故 first_rank 预期为 2。"
+      },
+      {
+        "id": "decoy-02-image",
+        "intent": "反例：图像类型查询不得由无障碍语义规则抢先回答",
+        "query": "图像 类型 信息 任务 图示 照片 素材",
+        "channel": "slides",
+        "k": 5,
+        "expect_within_k": ["rule:image:function"],
+        "must_not_be_first": ["rule:accessibility:semantic"],
+        "known_failing": true,
+        "note": "已知缺陷：当前 rule:accessibility:semantic 排第一，rule:image:function 掉到第 2。"
+      },
+      {
+        "id": "decoy-03-logo",
+        "intent": "反例：素材/资产查询不得由 anti_pattern 种子抢先回答",
+        "query": "Logo 变体 圆形 裁切 栅格化 渲染",
+        "channel": "web",
+        "k": 5,
+        "must_not_be_first": ["anti:generic:cyberpunk"],
+        "known_failing": true,
+        "note": "已知缺陷：语料没有 Logo 资产记录，当前 anti:generic:cyberpunk 排第一；anti_pattern 记录不应成为资产问题的首位答案。仅断言 must_not_be_first，池 ≥ 2 即可证伪。"
+      }
+    ],
+    "jspace": [
+      {
+        "id": "jspace-01",
+        "intent": "单轴：结构稳定性偏稳定端",
+        "args": ["--axis", "structural_stability", "--value", "0.8"],
+        "k": 5,
+        "pairwise": [
+          {
+            "higher": "case:stable:foundation",
+            "lower": "case:fluid:signal",
+            "reason": "axes.json structural_stability 的 +1.0 锚点是 case:stable:foundation，-1.0 锚点是 case:fluid:signal；目标值 0.8 在正端。"
+          }
+        ],
+        "note": "0.8 处 case:stable:foundation / rule:grid:modular / rule:legibility:context 距离并列 0.1，首位身份不可作为断言；只断言锚点极性。"
+      },
+      {
+        "id": "jspace-02",
+        "intent": "单轴：过程性偏流程端",
+        "args": ["--axis", "processuality", "--value", "0.8"],
+        "k": 5,
+        "pairwise": [
+          {
+            "higher": "case:fluid:signal",
+            "lower": "case:stable:foundation",
+            "reason": "axes.json processuality 的 +1.0 锚点是 case:fluid:signal，-1.0 锚点是 case:stable:foundation。"
+          },
+          {
+            "higher": "rule:grid:data-spine",
+            "lower": "case:stable:foundation",
+            "reason": "rule:grid:data-spine 也是 processuality 的 +1.0 锚点。"
+          }
+        ],
+        "note": "该轴正端锚点记录同时含 rule:grid:data-spine，首位身份不作为断言。"
+      },
+      {
+        "id": "jspace-03",
+        "intent": "多轴：结构稳定 0.8 + 过程性 0.7 的联合最近邻",
+        "args": ["--target", "structural_stability=0.8", "--target", "processuality=0.7"],
+        "k": 5,
+        "pairwise": [
+          {
+            "higher": "case:stable:foundation",
+            "lower": "case:fluid:signal",
+            "reason": "联合距离下 case:stable:foundation(0.9055) 应优于 case:fluid:signal(1.2166)；这是锚点极性在联合目标下的一致性断言。"
+          }
+        ],
+        "note": "旧案例断言 case:stable:foundation 为 first，仅在 --kind case（池=2）下成立；取消 kind 过滤后它是第 9 位，故改为距离/排序不变量与锚点极性断言。"
+      },
+      {
+        "id": "jspace-04",
+        "intent": "全轴零目标：走 axes.json 全部已知轴的距离分支",
+        "args": [],
+        "k": 5,
+        "pairwise": [],
+        "note": "覆盖 jspace.py 中 axis=all 且无 --target 时的欧氏距离分支；断言轴完整性、距离语义与排序一致。"
+      }
+    ]
+  }
+}

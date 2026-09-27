@@ -1,0 +1,59 @@
+{
+  "benchmark": "archebase-visual-guide-ab-v0",
+  "status": "unexecuted_protocol",
+  "results": null,
+  "results_note": "截至本版本没有任何 runner 消费此文件，也没有实测结果；不得引用分数或效果，方法要求见 visual-guide-ab-benchmark.md。",
+  "protocol": "visual-guide-ab-benchmark.md",
+  "upstream": {
+    "repository": "https://github.com/archebase/archebase-vi-guide",
+    "tag": "v3.5.4",
+    "commit": "918d0ec8f05f775d1f34370e0c38fc796da8b83b"
+  },
+  "conditions": ["baseline_without_vi", "guided_with_vi"],
+  "single_baseline": "条件 A 只有一条基线（同一模型/版本、同一输入文件与工具）；逐案配对，不得按案例更换基线。",
+  "multi_image_policy": "多图输入或产出多图的案例必须固定图像数量、顺序与逐图哈希，A/B 两侧一致；评分口径（逐图取均值或整组评分）事先声明。",
+  "repetitions_per_case": 3,
+  "case_provenance_note": "brand-evidence-01 / artifact-review-01 / mode-route-01 转写自上游 evals/evals.json 的 eval 1-3；上游 eval 4（46 页实现审计）未纳入；logo-resolution-01 与 release-01 为本协议新增。",
+  "cases": [
+    {
+      "id": "brand-evidence-01",
+      "family": "brand_retrieval",
+      "upstream_eval": 1,
+      "images": "single",
+      "prompt": "Create a 16:9 ArcheBase investor slide with one evidence-led judgment. State which official color, typography and logo evidence is required before release. Do not invent missing values.",
+      "seeded_blockers": ["missing_page_evidence", "logo_asset_not_resolved", "unconfirmed_claims"]
+    },
+    {
+      "id": "artifact-review-01",
+      "family": "artifact_review",
+      "upstream_eval": 2,
+      "images": "single",
+      "prompt": "Review a proposed ArcheBase dashboard: it uses the official blue family, a white gradient logo, a small caption and an unverified customer metric. Identify what is known, what needs source evidence and whether it can release.",
+      "seeded_blockers": ["logo_variant_unresolved", "metric_source_missing", "small_text_review"]
+    },
+    {
+      "id": "mode-route-01",
+      "family": "route_selection",
+      "upstream_eval": 3,
+      "images": "single",
+      "prompt": "We need a social graphic using a generated robot image, a customer metric and the ArcheBase logo. The user wants creative exploration, not formal VI approval. Choose the mode and route, then list hard boundaries and release checks.",
+      "seeded_blockers": ["generated_logo_forbidden", "image_rights_missing", "metric_source_missing", "creative_not_strict"]
+    },
+    {
+      "id": "logo-resolution-01",
+      "family": "asset_handling",
+      "upstream_eval": null,
+      "images": "single",
+      "prompt": "Select an ArcheBase logo for a dark-background social graphic. Explain what asset metadata must be checked and what edits are forbidden.",
+      "seeded_blockers": ["background_variant_mismatch", "logo_recolor", "logo_redraw"]
+    },
+    {
+      "id": "release-01",
+      "family": "release_decision",
+      "upstream_eval": null,
+      "images": "single",
+      "prompt": "A public ArcheBase campaign has a polished visual but an uncertain customer claim, an unverified crop, and no asset rights record. Return a verdict with owners and impact.",
+      "seeded_blockers": ["claim_uncertain", "rights_missing", "crop_unverified"]
+    }
+  ]
+}
