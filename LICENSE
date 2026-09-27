@@ -1,8 +1,17 @@
-# Internal application-layer skill
+# Publicly readable, no redistribution grant
 
-This repository is intended for internal ArcheBase use. No public redistribution license is granted by this file.
+This repository is published so that ArcheBase teams and their agents can load the
+skill by repository and commit. Public visibility is not a redistribution grant:
+the skill text, references and templates remain ArcheBase brand material, and the
+upstream VI Guide dependency (https://github.com/archebase/archebase-vi-guide) is
+proprietary and separately governed.
 
-Rights caveats:
+Rights notes:
 
-- Third-party design-source permissions are handled outside this repository; the rules in `references/` are synthesized method guidance, not reproductions of source text.
-- The upstream ArcheBase VI Guide dependency is proprietary and separately governed.
+- Reference files contain synthesized design-method guidance, not reproductions of
+  source text. Third-party permissions were confirmed by the brand owner on
+  2026-09-27 — see `archebase/archebase-design-workspace` → `sources/AUTHORIZATION.md`.
+- Attribution to each design source is kept in the referencing file; per-source
+  licence terms are recorded in that workspace's `sources/source-ledger.csv`.
+- Rights for any material you add to a deliverable remain the publisher's
+  responsibility.

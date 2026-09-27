@@ -43,4 +43,6 @@ The gradient logo SVGs use multiple stops with `stop-opacity`; ImageMagick's int
 
 ## Status
 
-Internal application-layer skill; the repository is **private**. A pre-publication exposure review (2026-09-27) found third-party derivative-permission items that must be resolved before making it public — the list lives in `archebase/archebase-design-workspace` → `PUBLICATION-BLOCKERS.md` (items 4–7: `references/grid-systems.md`, `references/vignelli-principles.md`, `references/legibility.md`, `references/image-and-information-design.md`). Until then: internal use only, and the `author` field plus the licence wording must be reviewed before any public release.
+Internal application-layer skill, published as a **publicly readable** repository (matching the sibling VI skill repos) so that teams and agents can load it by repository and commit. Public visibility is not a redistribution grant.
+
+Third-party permissions for the design-source methods were confirmed by the brand owner on 2026-09-27 — see `archebase/archebase-design-workspace` → `sources/AUTHORIZATION.md` (and `PUBLICATION-STATUS.md` for how the pre-publication findings were handled). Attribution to each source stays in the reference files. The upstream VI Guide dependency is proprietary and separately governed.

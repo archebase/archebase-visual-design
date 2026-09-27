@@ -17,4 +17,4 @@ See `skill-dependencies.json`:
 
 ## Source-derived design methods
 
-Reference files in this repository contain synthesized design-method guidance, not the original books or full source texts. The methods are distilled from public graphic-design literature and teaching material and are used as operational method only. Third-party permissions are handled outside this repository and no per-source licence ledger is maintained here; publishing this repository requires the publisher to confirm those permissions first. The unresolved items are recorded in the workspace's `PUBLICATION-BLOCKERS.md`.
+Reference files in this repository contain synthesized design-method guidance, not the original books or full source texts. The methods are distilled from public graphic-design literature and teaching material, with attribution kept in the referencing file. Third-party permissions were confirmed by the brand owner on 2026-09-27 (`archebase/archebase-design-workspace` → `sources/AUTHORIZATION.md`); per-source licence terms are recorded in that workspace's `sources/source-ledger.csv`. Rights for material added to a deliverable remain the publisher's responsibility.
