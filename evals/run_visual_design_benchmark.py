@@ -17,6 +17,7 @@ SKILL_DIR = EVALS_DIR.parent
 DEFAULT_CASE_FILE = EVALS_DIR / 'visual-design-benchmark.json'
 STORE_DIRNAME = 'archebase-design-ir'
 STORE_REQUIRED = ('query.py', 'jspace.py', 'axes.json')
+STORE_INDEX = 'design_ir.sqlite3'  # 构建产物：clone 后需先跑 build_index.py
 DIST_TOL = 5e-5  # jspace.py 报告的 distance 只保留 4 位小数
 
 
@@ -220,6 +221,12 @@ def main():
     store, label, tried = resolve_store(args.store)
     if store is None:
         die_unresolved('Design IR store', tried, 'ARCHEBASE_DESIGN_IR', STORE_DIRNAME)
+    index = store / STORE_INDEX
+    if not index.is_file() or index.stat().st_size == 0:
+        print(f'[待确认] store 索引未生成：{index}', file=sys.stderr)
+        print(f'  索引是构建产物（仓库 https://github.com/archebase/archebase-design-ir 不随包分发），'
+              f'先运行：python3 {store / "build_index.py"}', file=sys.stderr)
+        raise SystemExit(2)
 
     case_path = Path(args.cases)
     if not case_path.is_file():
