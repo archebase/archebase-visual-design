@@ -30,7 +30,7 @@
       "name": "design-ir-store",
       "repository": "https://github.com/archebase/archebase-design-workspace",
       "tag": null,
-      "commit": "858e27ec6eec7e5a8e9ea104e26a20d1f69bbd0d",
+      "commit": "e4e7dda10698a33d7439d8397db24f6a4603aafb",
       "required": false,
       "authority": "derived retrieval corpus and design-space tooling only; its records are not VI evidence and must never be cited as brand authority",
       "resolution": "Resolve the store directory in this order: the ARCHEBASE_DESIGN_IR environment variable; <skill parent>/archebase-design-workspace/ir (current layout); <skill parent>/archebase-design-ir (legacy sibling layout); $HOME and $HOME/Books variants of both; else clone https://github.com/archebase/archebase-design-workspace at the pinned commit and use its ir/ directory. The index is a build artifact: run ir/build_index.py first. Verify git rev-parse HEAD against the pin before treating the checkout as the corpus identity; if unreachable or mismatched, stop the Design IR route and record 待确认.",
