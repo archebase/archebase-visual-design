@@ -28,14 +28,13 @@
     },
     {
       "name": "design-ir-store",
-      "repository": null,
+      "repository": "https://github.com/archebase/archebase-design-ir",
       "tag": null,
-      "commit": null,
+      "commit": "db5182647ada3f57fe5a2b023d60fb15713f2bd6",
       "required": false,
       "authority": "derived retrieval corpus and design-space tooling only; its records are not VI evidence and must never be cited as brand authority",
-      "resolution": "Resolve from the environment variable ARCHEBASE_DESIGN_IR, else from the sibling directory ../archebase-design-ir relative to this skill. If unreachable, stop the Design IR route and record 待确认.",
-      "identity_gap": "The store currently has no repository identity or remote (待确认); until it does, treat it as a machine-local cache and never as a source of truth.",
-      "update_policy": "Regenerate the index (build_index.py) after any record change, then re-run evals/run_visual_design_benchmark.py."
+      "resolution": "Resolve from the environment variable ARCHEBASE_DESIGN_IR, else from the sibling directory ../archebase-design-ir relative to this skill, else by cloning the GitHub repository at the pinned commit. Verify git rev-parse HEAD against the pin before using it as the corpus identity; a local checkout is a cache. If unreachable or the identity does not match, stop the Design IR route and record 待确认.",
+      "update_policy": "Regenerate the index (build_index.py) after any record change, then re-run evals/run_visual_design_benchmark.py; advance the pinned commit only together with a record change that passes the store's own validators."
     }
   ],
   "non_goals": [

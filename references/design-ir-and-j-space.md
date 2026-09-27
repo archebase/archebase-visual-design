@@ -12,7 +12,10 @@ Design IR store 是品牌事实的**派生消费者**，不是品牌权威：sto
 
 1. 环境变量 `ARCHEBASE_DESIGN_IR` 指向的目录。
 2. 本 Skill 的同级目录 `archebase-design-ir`（相对本文件即 `../../archebase-design-ir`）。
-3. 两者都不可达时停止该路由并报告 `待确认`，不得凭记忆、猜测或另一台机器的路径继续。
+3. 从 GitHub `archebase/archebase-design-ir` clone 并按 `skill-dependencies.json` 的 commit 检出。
+4. 以上都不可达时停止该路由并报告 `待确认`，不得凭记忆、猜测或另一台机器的路径继续。
+
+store 的身份必须可核对：`git -C <store> rev-parse HEAD` 必须等于 `skill-dependencies.json` 中 `design-ir-store` 的 pin；不一致时按 `待确认` 停止，不得用旧缓存当语料。
 
 解析成功后，下文提到的工具与数据文件都按 store 相对名引用：`design-ir-schema.yaml`、`build_index.py`、`records.jsonl`、`axes.json`、`query.py`、`jspace.py`、`validate_jspace.py`、`validate_candidate.py`、`inspect_svg.py`、`inspect_raster.py`、`preflight.py`、`JSPACE-CALIBRATION.md`。
 
