@@ -42,7 +42,10 @@ NAME_MENTION_ONLY = re.compile(r'未批准|不得使用|禁止使用|错误写�
 NAME_ASSERTION = re.compile(r'(公开名称|批准名称|public\s+name)[^。\n]{0,16}(?:必须|应为|是|为)\s*`?(?:Archebase|ARCHEBASE|Arche\s+Base|Arche-Base|Arche_base|ArcheBaseAI)')
 EVIDENCE_REF = re.compile(r'\b(?:id|evidence)\s+`([A-Za-z][A-Za-z0-9_.-]*)`')
 PAGES = re.compile(r'\bp{1,2}\.\s*([0-9][0-9,、/\-]*)')
-LOGO_METRIC = re.compile(r'(安全区|最小尺寸|最小尺寸值|clear\s?space|minimum\s+size)[^。\n]{0,24}[0-9]+\s?(px|mm|dp|pt|em)')
+LOGO_WORD = r'(?:logo|标志|图形标|clear\s?space|minimum\s+size|最小尺寸)'
+METRIC = r'[0-9]+(?:\.[0-9]+)?\s?(?:px|mm|dp|pt|em)'
+# 只有与 Logo 语境同现的数值才算“臆造 Logo 度量”：印刷版心安全区、最小字号等不属于此
+LOGO_METRIC = re.compile(rf'(?:{LOGO_WORD}[^。\n]{{0,40}}{METRIC})|(?:{METRIC}[^。\n]{{0,40}}{LOGO_WORD})', re.I)
 CSS_WEIGHT = re.compile(r'font-weight\s*:?\s*[0-9]{3}')
 
 def add(status, item, expected, found, where=''):

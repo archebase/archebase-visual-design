@@ -1,0 +1,129 @@
+{
+  "schema_version": "1.0",
+  "purpose": "L1 路由用例集：检查本 Skill 是否可能被选中，以及与上游 archebase-vi-guide 的边界是否在索引层可见。",
+  "loader": {
+    "desc_char_limit": 60,
+    "truncation": "desc[:limit-3] + '...'",
+    "source": "Hermes skill loader：~/.hermes/hermes-agent/agent/skill_utils.py 的 SKILL_PROMPT_DESC_LIMIT 与 extract_skill_description",
+    "note": "路由发生在加载之前，只有描述的前 limit 个字符进入索引；超出部分等于不存在。"
+  },
+  "skills": {
+    "visual-design": {
+      "skill_md": "../SKILL.md",
+      "key_terms": ["海报", "头图", "社媒", "信息图", "报告封面", "设计方法", "评审"],
+      "boundary_terms": ["vi-guide", "品牌事实"],
+      "note": "key_terms 必须在窗口内可见才有意义；boundary_terms 必须至少在 SKILL.md 正文中存在。"
+    },
+    "vi-guide": {
+      "skill_md": "${ARCHEBASE_VI_GUIDE}/SKILL.md",
+      "key_terms": ["brand", "VI review", "logo", "typography"],
+      "note": "上游描述窗口只有 57 字符，中文请求通常无法与窗口做字面匹配，因此对上游只做边界提示，不做硬判定。"
+    }
+  },
+  "cases": [
+    {
+      "id": "vd-01-poster",
+      "query": "帮我出 Physical AI 主题的研究海报视觉方案",
+      "expect": "visual-design",
+      "boundary_reason": "SKILL.md When to Use：海报属于本 Skill 的方法与评审范围"
+    },
+    {
+      "id": "vd-02-wechat-cover",
+      "query": "把这篇技术文章做成公众号头图，给个视觉方向",
+      "expect": "visual-design",
+      "boundary_reason": "SKILL.md When to Use：公众号头图由本 Skill 给出方案，渠道实现细节见 references/channel-wechat.md"
+    },
+    {
+      "id": "vd-03-social",
+      "query": "出一组社媒图，风格要统一",
+      "expect": "visual-design",
+      "boundary_reason": "SKILL.md When to Use：社媒图属于本 Skill 范围"
+    },
+    {
+      "id": "vd-04-infographic",
+      "query": "把这条数据流程做成信息图",
+      "expect": "visual-design",
+      "boundary_reason": "SKILL.md When to Use：信息图属于本 Skill 范围"
+    },
+    {
+      "id": "vd-05-report-cover",
+      "query": "研究报告封面要一版设计",
+      "expect": "visual-design",
+      "boundary_reason": "SKILL.md When to Use：报告封面属于本 Skill 范围"
+    },
+    {
+      "id": "vd-06-review",
+      "query": "评审这版海报的构图和层级",
+      "expect": "visual-design",
+      "boundary_reason": "SKILL.md 分工边界：方法判断与评审由本 Skill 负责"
+    },
+    {
+      "id": "vd-07-method",
+      "query": "给我一套版面设计方法，讲网格和字体层级",
+      "expect": "visual-design",
+      "boundary_reason": "SKILL.md 分工边界：构图/网格/字体判断属于本 Skill 的方法层"
+    },
+    {
+      "id": "vg-01-brand-color",
+      "query": "我们的品牌色到底是哪几个，包含白色吗",
+      "expect": "vi-guide",
+      "boundary_reason": "SKILL.md:22 分工边界：色值权威值以上游为准"
+    },
+    {
+      "id": "vg-02-logo-variant",
+      "query": "圆形头像里该用哪个 Logo 变体",
+      "expect": "vi-guide",
+      "boundary_reason": "SKILL.md:22 与硬约束：Logo 资产解析规则在上游 references/logo-asset-resolver.md"
+    },
+    {
+      "id": "vg-03-release-gate",
+      "query": "这版物料能发布吗，发布门禁是什么",
+      "expect": "vi-guide",
+      "boundary_reason": "SKILL.md:22 分工边界：发布门禁以上游为准"
+    },
+    {
+      "id": "vg-04-guide-page",
+      "query": "Guide 第 28 页的颜色比例是多少",
+      "expect": "vi-guide",
+      "boundary_reason": "SKILL.md:22 分工边界：Guide 页证据与数值以上游为准"
+    },
+    {
+      "id": "vg-05-font-authority",
+      "query": "VI 里字体的权威值是什么",
+      "expect": "vi-guide",
+      "boundary_reason": "SKILL.md:22 分工边界：字体权威值以上游为准"
+    },
+    {
+      "id": "none-01-finance",
+      "query": "总结这份季度财务表格",
+      "expect": "neither",
+      "boundary_reason": "与本 Skill 及上游品牌范围无关"
+    },
+    {
+      "id": "none-02-code",
+      "query": "帮我修这个 Python 报错",
+      "expect": "neither",
+      "boundary_reason": "与本 Skill 及上游品牌范围无关"
+    },
+    {
+      "id": "none-03-translate",
+      "query": "把这段话翻译成英文",
+      "expect": "neither",
+      "boundary_reason": "与本 Skill 及上游品牌范围无关"
+    },
+    {
+      "id": "amb-01-vi-poster-rule",
+      "query": "VI Guide 里对海报的应用板规则是什么",
+      "expect": "vi-guide",
+      "ambiguity": true,
+      "boundary_reason": "查询同时含品牌证据诉求与“海报”一词：字面会撞上本 Skill 窗口，属于已知难例"
+    },
+    {
+      "id": "amb-02-wechat-spec",
+      "query": "公众号头图的官方尺寸规范在哪",
+      "expect": "vi-guide",
+      "ambiguity": true,
+      "boundary_reason": "查询含“头图”但诉求是官方尺寸规范：渠道规范在 archebase-wechat-layout，不属于本 Skill 的方法产出"
+    }
+  ]
+}

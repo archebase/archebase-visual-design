@@ -52,7 +52,7 @@ ArcheBase / 智域基石是 Physical AI 的数据基础设施：把复杂物理�
 - 待确认：精确生产字体文件与授权，以及 `Source Han Sans SC` 这一命名是否适用。
 
 （上游 `tokens/archebase.tokens.json` 的 `type`；`assets/guide-evidence.json` id `typography.specimens`，Guide pp.6/10/14/26。）
-渲染/打样可使用另行取得许可的实现字体；实际 family、文件、字重、授权和 fallback 必须记录在 `visual-spec.md`，不得把替代字体写成 VI 已确认生产字体。上游 VI 不随附字体文件；缺少可验证字体时，交付状态只能记为 `待确认`，保留 live text 与可复现的字体配置。
+渲染与打样：上游 VI 不随附字体文件；可使用另行取得许可的同设计字体（中文 `Noto Sans CJK SC`，与 `思源黑体` 同设计；拉丁 `Poppins`）。渲染前用 `fc-match '<family>'` 或输出文件的 `/BaseFont` 表确认**实际解析到的 family**，并把实际 family、字重、文件与授权记入 [visual-spec.md](../templates/visual-spec.md)；解析到替代字体时交付状态记 `待确认`，不得声明已按 VI 字体渲染。保留 live text 与可复现的字体配置。
 
 渠道字体回退栈（`Noto Sans CJK SC / PingFang SC / Microsoft YaHei`）是渠道实现细节，归 [channel-wechat.md](channel-wechat.md)，不写进本品牌系统文件。
 

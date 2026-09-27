@@ -8,6 +8,7 @@
     {"value": "", "role": "background"},
     {"value": "", "role": "brand_anchor"},
     {"value": "", "role": "supporting"},
+    {"value": "", "role": "secondary_data"},
     {"value": "", "role": "signal"},
     {"value": "", "role": "body_text"},
     {"value": "", "role": "small_text"}

@@ -1,22 +1,27 @@
 # evals — 本 Skill 的可运行自检
 
-本目录只有两个可运行脚本，其余文件是案例数据与**尚未执行**的评测协议。
+本目录有三个可运行脚本；其余文件是案例数据与评测协议（A/B 有 harness，但尚未填入实测结果）。
 
 ```text
 check_brand_facts.py           品牌事实一致性（本 Skill ↔ 上游 VI Guide）
 run_visual_design_benchmark.py 检索 + 设计空间回归（读 Design IR store）
-visual-design-benchmark.json   上面 runner 的案例数据（唯一被 runner 消费的文件）
-benchmark-cases.json           A/B 协议案例（无 runner，见“未执行的协议”）
-visual-guide-ab-benchmark.md   A/B 协议正文（无结果、未执行）
+check_routing.py               索引层路由可达性与 vi-guide 边界（读 route_cases.json）
+route_cases.json               路由用例集（正例 / 边界 / 无关 / 已知难例）
+run_ab_benchmark.py            A/B 评测 harness（--plan 出运行清单与盲评表，--score 算指标与 CI）
+visual-design-benchmark.json   检索回归的案例数据（被 run_visual_design_benchmark.py 消费）
+benchmark-cases.json           A/B 协议案例（被 run_ab_benchmark.py 消费）
+visual-guide-ab-benchmark.md   A/B 协议正文与 harness 用法
 ```
 
 ## 运行
 
-两个脚本都只读、确定性、无网络；路径解析基于脚本自身位置，因此从任意工作目录调用都可以（下列命令在 Skill 根目录执行）：
+三个脚本都只读、确定性、无网络；路径解析基于脚本自身位置，因此从任意工作目录调用都可以（下列命令在 Skill 根目录执行）：
 
 ```bash
 python3 evals/check_brand_facts.py              # 退出码 0 一致 / 1 有分歧 / 2 上游不可达
 python3 evals/run_visual_design_benchmark.py    # 默认退出码 0（报告模式）；--strict 在状态为 FAIL 时退出 1
+python3 evals/check_routing.py                  # 退出码 0 无 FAIL / 1 存在 FAIL / 2 依赖不可解析
+python3 evals/run_ab_benchmark.py --plan --out /tmp/ab   # A/B：出运行清单、提示词与盲评表
 ```
 
 路径解析顺序（都不含机器绝对路径默认值）：
@@ -46,6 +51,35 @@ python3 evals/run_visual_design_benchmark.py    # 默认退出码 0（报告模�
 - 文本语义改写：把事实换成另一种等价表述可以躲过存在性检查；百分比配对用的是近距离启发式，不是语义解析。
 - WARN 行（如渠道 CSS 的浅色 tint `#F3F5FF`、表头反白 `#FFFFFF` 等，来源 `assets/archebase-wechat-safe.css`）只表示“非品牌 token，已声明来源”，不阻断；它们不是品牌色板的一部分（核心品牌色仍只有五个：上游 `tokens/archebase.tokens.json`）。
 - 第三方素材授权不在本目录度量范围；本 Skill 不维护许可台账，也不给出任何清权结论。
+
+## check_routing.py
+
+在**加载之前**的索引层检查本 Skill 是否可能被选中，以及与上游 `archebase-vi-guide` 的边界是否可见。Hermes loader 只把描述的前 60 字符（`desc[:57] + '...'`）放进索引，超出部分对路由等于不存在（`~/.hermes/hermes-agent/agent/skill_utils.py` 的 `SKILL_PROMPT_DESC_LIMIT`）。
+
+判定规则：
+
+- `expect=visual-design` 的用例必须命中索引窗口内的 key term，否则该请求在索引层无法被本 Skill 接住 → FAIL。
+- `expect=vi-guide` / `neither` 的用例若命中本 Skill 的 key term → WARN（字面层不可区分，需模型按 `SKILL.md` 分工边界裁决）；标 `ambiguity: true` 的已知难例只报 WARN。
+- 结构性检查：`boundary_terms` 必须存在于 `SKILL.md` 正文；落在窗口外的 key term 会单独列出。
+
+`--limit N` 模拟更严格的 loader；`--print-window` 只打印窗口。脚本只做字面判定，不替代模型裁决。反证：`--limit 30` 时正例立即 FAIL（rc=1），说明检查不是永远通过。
+
+## L1 实测（2026-09-27）
+
+字面检查（`check_routing.py`，17 个用例）：FAIL 0，WARN 2（两个 `ambiguity` 已知难例）。
+
+语义探测（判官代理，**不是**线上 router）：只用两个 Skill **截断后的窗口文字**作为可见信息，让判官模型为 7 条正例 / 5 条边界 / 3 条无关 / 2 条难例各选一个 Skill，重复 4 次：
+
+| 指标 | 结果 |
+|---|---|
+| 准确率 | 0.94（16/17），4 次运行一致 |
+| 逐用例稳定 | 17/17 不翻转 |
+| 正例（海报/头图/社媒/信息图/报告封面/评审/设计方法） | 7/7 选中本 Skill |
+| 边界用例（色值/Logo 变体/发布门禁/Guide 页码/字体权威） | 5/5 落到 `vi-guide` |
+| 无关用例 | 3/3 `neither` |
+| 唯一错例 | `amb-02`「公众号头图的官方尺寸规范在哪」→ 本 Skill（已声明的已知难例：含“头图”但诉求是官方规格） |
+
+方法与边界：判官代理 ≠ 线上 router（`[UNVERIFIED]`：未对真实 router 执行）。改写描述前的同法探测中，“公众号头图”类请求 3/3 落到 `vi-guide`；改写后同一方法 4/4 落到本 Skill，因此这是可复现的改善，但仍不是线上路由结论。`amb-02` 的兜底：即使加载本 Skill，`SKILL.md` 的渠道路由也会把尺寸规范指向 `references/channel-wechat.md` 与渠道 CSS 仓库。
 
 ## run_visual_design_benchmark.py
 
@@ -88,6 +122,6 @@ python3 evals/run_visual_design_benchmark.py
 - 语料只有 11 条记录，其中 case 记录 `status=proposed`、`anti_pattern` 1 条；池小是语料的性质，不是本基准可以掩盖的。
 - 不度量人类视觉质量、渲染产物、上游 VI Guide 正确性。
 
-## 未执行的协议
+## A/B 协议与 harness
 
-[visual-guide-ab-benchmark.md](visual-guide-ab-benchmark.md) 与 [benchmark-cases.json](benchmark-cases.json) 是 A/B 评测协议与案例，**没有任何 runner 消费它们，也没有任何实测结果**。要评测“加入本 Skill 是否改善结果”，先按该文件的单一基线与多图要求实现运行与盲评，再报告结果；不得把协议本身当作效果证明。
+[visual-guide-ab-benchmark.md](visual-guide-ab-benchmark.md) 与 [benchmark-cases.json](benchmark-cases.json) 是 A/B 评测协议与案例。`run_ab_benchmark.py` 现在能按协议生成运行清单、渲染提示词、随机化盲评表（`--plan`）、校验结果完整性（`--validate`）并统计指标与 bootstrap 置信区间（`--score`），但**尚未有人填入实测结果**，因此本仓库目前没有任何可引用的效果分数。不得把协议或 harness 本身当作效果证明。
