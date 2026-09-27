@@ -27,7 +27,7 @@ python3 evals/run_ab_benchmark.py --plan --out /tmp/ab   # A/B：出运行清单
 路径解析顺序（都不含机器绝对路径默认值）：
 
 - 上游 VI Guide：`ARCHEBASE_VI_GUIDE` → Skill 目录/上级目录/上上级目录 → `$HOME` → `$HOME/Books` 下的 `archebase-vi-guide`；
-- Design IR store：`ARCHEBASE_DESIGN_IR` → `archebase-design-workspace/ir`（当前布局）→ `archebase-design-ir`（兼容旧布局）→ 按 pin clone `https://github.com/archebase/archebase-design-workspace`；身份（commit）见 `skill-dependencies.json` 的 `design-ir-store`；索引是构建产物，先跑 `ir/build_index.py`。
+- Design IR store：`ARCHEBASE_DESIGN_IR` → `archebase-design-workspace/ir`（当前布局）→ `archebase-design-ir`（兼容旧布局）→ 按 pin clone `https://github.com/archebase/archebase-design-workspace`（**内部仓库，需访问权限**）；身份（commit）见 `skill-dependencies.json` 的 `design-ir-store`；索引是构建产物，先跑 `ir/build_index.py`。无权限或不可达时本脚本按 `待确认` 退出 2——品牌事实检查与路由检查不依赖 store，可照常运行。
 
 **上游身份必须核对**：本地 clone 只是缓存。候选目录必须完整（`SKILL.md`、`tokens/archebase.tokens.json`、`assets/guide-evidence.json`、`references/visual-grammar.md`、`references/asset-governance.md`），并且 `git rev-parse HEAD` 等于 `skill-dependencies.json` 里 `archebase-vi-guide` 的 pin；解析器会优先选身份与 pin 一致的候选，避免同机上的旧副本被当成权威。身份不一致或不可核对时 `check_brand_facts.py` 按 `待确认` 退出 2（`--allow-unpinned` 可继续做参考比较，结果只能视为待确认）；若上游副本连批准公开名称都读不出来，同样按上游不可用退出 2，而不是判本 Skill 有分歧。
 

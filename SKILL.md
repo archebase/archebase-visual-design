@@ -172,7 +172,7 @@ metadata:
 - 来源与不可推断边界：读取 [references/source-boundaries.md](references/source-boundaries.md)；素材只记录来源与用途，不在此维护许可台账。
 - 检索候选记录：使用 [templates/retrieval-record.json](templates/retrieval-record.json)；交付前按 [templates/candidate-record.json](templates/candidate-record.json) 记录候选并交给 `validate_candidate.py`。
 - 记录设计决策与验证链：使用 [templates/decision-trace.md](templates/decision-trace.md)。
-- 复杂项目的 Design IR、案例检索和设计空间探索：读取 [references/design-ir-and-j-space.md](references/design-ir-and-j-space.md)，使用 [templates/design-ir.yaml](templates/design-ir.yaml)；embedding 只提供候选，不改变硬约束。Store 身份：`https://github.com/archebase/archebase-design-workspace` 的 `ir/`（pin 见 `skill-dependencies.json` 的 `design-ir-store`，不在本文重复）；解析顺序为环境变量 `ARCHEBASE_DESIGN_IR` → 工作区 `archebase-design-workspace/ir` → 兼容旧布局 `archebase-design-ir` → 按 pin clone；先建索引（`ir/build_index.py`），身份不可核对时停止该路由并记 `待确认`。
+- 复杂项目的 Design IR、案例检索和设计空间探索：读取 [references/design-ir-and-j-space.md](references/design-ir-and-j-space.md)，使用 [templates/design-ir.yaml](templates/design-ir.yaml)；embedding 只提供候选，不改变硬约束。Store 身份：内部仓库 `https://github.com/archebase/archebase-design-workspace` 的 `ir/`（需访问权限；无权限时该路由按 `待确认` 停止，其余工作不受影响）（pin 见 `skill-dependencies.json` 的 `design-ir-store`，不在本文重复）；解析顺序为环境变量 `ARCHEBASE_DESIGN_IR` → 工作区 `archebase-design-workspace/ir` → 兼容旧布局 `archebase-design-ir` → 按 pin clone；先建索引（`ir/build_index.py`），身份不可核对时停止该路由并记 `待确认`。
 - 品牌依赖与版本锁定：读取 `skill-dependencies.json`；必须使用 GitHub `archebase/archebase-vi-guide` 的锁定 tag/commit，不复制上游 Skill。
 - 评估本设计方法 Skill 是否改善结果：入口与指标口径见 [evals/README.md](evals/README.md)，运行 `python3 evals/run_visual_design_benchmark.py` 与 `python3 evals/check_brand_facts.py`；[evals/visual-guide-ab-benchmark.md](evals/visual-guide-ab-benchmark.md) 是尚未执行的 A/B 协议，不得当作已有结果或效果证明。
 

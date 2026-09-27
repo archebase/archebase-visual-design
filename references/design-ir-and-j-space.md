@@ -13,8 +13,8 @@ Design IR store 是品牌事实的**派生消费者**，不是品牌权威：sto
 1. 环境变量 `ARCHEBASE_DESIGN_IR` 指向的目录。
 2. 工作区仓库 `archebase-design-workspace` 的 `ir/` 子目录：本 Skill 的 `../archebase-design-workspace/ir`，以及 `$HOME/Books/archebase-design-workspace/ir`。
 3. 兼容旧布局：同级目录 `archebase-design-ir`（相对本文件即 `../../archebase-design-ir`）。
-4. 从 GitHub `archebase/archebase-design-workspace` clone，按 `skill-dependencies.json` 的 commit 检出，使用其中的 `ir/`。
-5. 以上都不可达时停止该路由并报告 `待确认`，不得凭记忆、猜测或另一台机器的路径继续。
+4. 从 GitHub `archebase/archebase-design-workspace` clone，按 `skill-dependencies.json` 的 commit 检出，使用其中的 `ir/`（**内部仓库，需访问权限**）。
+5. 以上都不可达时停止该路由并报告 `待确认`，不得凭记忆、猜测或另一台机器的路径继续。该路由是本 Skill 的可选依赖：品牌事实、构图/字体/颜色/无障碍方法与其余检查都不依赖 store，无权限时其余工作照常进行。
 
 store 的身份必须可核对：`git -C <store 所在仓库> rev-parse HEAD` 必须等于 `skill-dependencies.json` 中 `design-ir-store` 的 pin；不一致时按 `待确认` 停止，不得用旧缓存当语料。store 是构建产物依赖：索引缺失时先在 `ir/` 下运行 `python3 build_index.py`。
 

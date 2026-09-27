@@ -10,7 +10,7 @@ Rights notes:
 
 - Reference files contain synthesized design-method guidance, not reproductions of
   source text. Third-party permissions were confirmed by the brand owner on
-  2026-09-27 — see `archebase/archebase-design-workspace` → `sources/AUTHORIZATION.md`.
+  2026-09-27; the record lives in the internal repository `archebase/archebase-design-workspace` (`sources/AUTHORIZATION.md`).
 - Attribution to each design source is kept in the referencing file; per-source
   licence terms are recorded in that workspace's `sources/source-ledger.csv`.
 - Rights for any material you add to a deliverable remain the publisher's

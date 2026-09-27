@@ -66,6 +66,8 @@ def die_unresolved(kind, tried, env_var, hint):
     for item in tried:
         print(f'    - {item}', file=sys.stderr)
     print(f'  修复：export {env_var}=<路径>，或把 {hint} 放在上述同级目录之一。', file=sys.stderr)
+    print('  说明：Design IR store 位于内部仓库 archebase/archebase-design-workspace（需访问权限）；'
+          '无权限时本脚本按待确认退出 2，品牌事实检查与路由检查不依赖它。', file=sys.stderr)
     raise SystemExit(2)
 
 
@@ -231,7 +233,7 @@ def main():
     index = store / STORE_INDEX
     if not index.is_file() or index.stat().st_size == 0:
         print(f'[待确认] store 索引未生成：{index}', file=sys.stderr)
-        print(f'  索引是构建产物（仓库 https://github.com/archebase/archebase-design-ir 不随包分发），'
+        print(f'  索引是构建产物（仓库 https://github.com/archebase/archebase-design-workspace 的 ir/ 不随包分发），'
               f'先运行：python3 {store / "build_index.py"}', file=sys.stderr)
         raise SystemExit(2)
 
