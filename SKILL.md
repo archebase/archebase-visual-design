@@ -33,7 +33,7 @@ metadata:
 - Logo 只用 `智域基石 Logo V2` 交付的资产，不得重绘、重新配色、拉伸或加效果；圆形或可能被圆形裁切的表面使用 `方圆通用` 变体，不得由 `方形` 缩放或遮罩生成；渐变 Logo 必须用 `rsvg-convert`/浏览器渲染或直接使用捆绑 PNG，不得使用 ImageMagick 内部 SVG 渲染器（上游 `references/logo-asset-resolver.md`）。
 - 品牌色只有上游 `tokens/archebase.tokens.json` 的五个 token；不得新增品牌色。白色/浅色表面是应用默认，不是品牌 token。
 - 不得编造产品能力、客户、数据、指标、行业地位或技术架构，也不得使用未经确认的公开宣称。
-- 客户数据与个人隐私未确认时不得对外交付；第三方素材授权默认已取得，本 Skill 不维护许可台账。
+- 客户数据与个人隐私未确认时不得对外交付；第三方素材在内部默认按已获授权处理，本 Skill 不维护许可台账；对外发布前由发布方确认授权。
 - 版本漂移处理：依赖 tag/commit 变化后，先运行上游 `scripts/` 下九个确定性校验器（`validate_logo_bundle.py`、`validate_asset_integrity.py`、`validate_guide_evidence.py`、`validate_guide_pages.py`、`validate_modes.py`、`validate_tokens.py`、`validate_asset_reference.py`、`check_release_report.py`、`check_doc_links.py`）以及本 Skill 的 `evals/check_brand_facts.py`，全部通过后再更新兼容基线；上游 `evals/evals.json` 没有 runner，不要把它当作可执行套件。
 
 ## 标准流程
@@ -172,7 +172,7 @@ metadata:
 - 来源与不可推断边界：读取 [references/source-boundaries.md](references/source-boundaries.md)；素材只记录来源与用途，不在此维护许可台账。
 - 检索候选记录：使用 [templates/retrieval-record.json](templates/retrieval-record.json)；交付前按 [templates/candidate-record.json](templates/candidate-record.json) 记录候选并交给 `validate_candidate.py`。
 - 记录设计决策与验证链：使用 [templates/decision-trace.md](templates/decision-trace.md)。
-- 复杂项目的 Design IR、案例检索和设计空间探索：读取 [references/design-ir-and-j-space.md](references/design-ir-and-j-space.md)，使用 [templates/design-ir.yaml](templates/design-ir.yaml)；embedding 只提供候选，不改变硬约束。Store 身份：`https://github.com/archebase/archebase-design-ir`（pin 见 `skill-dependencies.json` 的 `design-ir-store`，不在本文重复）；解析顺序为环境变量 `ARCHEBASE_DESIGN_IR` → 本 Skill 同级目录 `../archebase-design-ir` → 按 pin clone；身份不可核对时停止该路由并记 `待确认`。
+- 复杂项目的 Design IR、案例检索和设计空间探索：读取 [references/design-ir-and-j-space.md](references/design-ir-and-j-space.md)，使用 [templates/design-ir.yaml](templates/design-ir.yaml)；embedding 只提供候选，不改变硬约束。Store 身份：`https://github.com/archebase/archebase-design-workspace` 的 `ir/`（pin 见 `skill-dependencies.json` 的 `design-ir-store`，不在本文重复）；解析顺序为环境变量 `ARCHEBASE_DESIGN_IR` → 工作区 `archebase-design-workspace/ir` → 兼容旧布局 `archebase-design-ir` → 按 pin clone；先建索引（`ir/build_index.py`），身份不可核对时停止该路由并记 `待确认`。
 - 品牌依赖与版本锁定：读取 `skill-dependencies.json`；必须使用 GitHub `archebase/archebase-vi-guide` 的锁定 tag/commit，不复制上游 Skill。
 - 评估本设计方法 Skill 是否改善结果：入口与指标口径见 [evals/README.md](evals/README.md)，运行 `python3 evals/run_visual_design_benchmark.py` 与 `python3 evals/check_brand_facts.py`；[evals/visual-guide-ab-benchmark.md](evals/visual-guide-ab-benchmark.md) 是尚未执行的 A/B 协议，不得当作已有结果或效果证明。
 

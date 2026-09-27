@@ -16,13 +16,19 @@ EVALS_DIR = Path(__file__).resolve().parent
 SKILL_DIR = EVALS_DIR.parent
 DEFAULT_CASE_FILE = EVALS_DIR / 'visual-design-benchmark.json'
 STORE_DIRNAME = 'archebase-design-ir'
+WORKSPACE_DIRNAME = 'archebase-design-workspace'
+STORE_SUBDIR = 'ir'
 STORE_REQUIRED = ('query.py', 'jspace.py', 'axes.json')
 STORE_INDEX = 'design_ir.sqlite3'  # 构建产物：clone 后需先跑 build_index.py
 DIST_TOL = 5e-5  # jspace.py 报告的 distance 只保留 4 位小数
 
 
 def store_candidates(cli_path):
-    """按顺序返回候选 store：(来源说明, 路径)。不含机器绝对路径默认值。"""
+    """按顺序返回候选 store：(来源说明, 路径)。不含机器绝对路径默认值。
+
+    store 现在位于工作区仓库 archebase-design-workspace 的 ir/ 下；旧的同级
+    archebase-design-ir 布局仍作为兼容候选保留。
+    """
     out = []
     if cli_path:
         out.append(('--store', Path(cli_path).expanduser()))
@@ -39,7 +45,8 @@ def store_candidates(cli_path):
     for label, root in roots:
         if root.name == STORE_DIRNAME:
             out.append((f'{label}本身 {root}', root))
-        out.append((f'{label} 下的 {STORE_DIRNAME}（{root}）', root / STORE_DIRNAME))
+        out.append((f'{label} 下的 {WORKSPACE_DIRNAME}/{STORE_SUBDIR}（{root}）', root / WORKSPACE_DIRNAME / STORE_SUBDIR))
+        out.append((f'{label} 下的 {STORE_DIRNAME}（兼容旧布局）（{root}）', root / STORE_DIRNAME))
     return out
 
 

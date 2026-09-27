@@ -28,13 +28,14 @@
     },
     {
       "name": "design-ir-store",
-      "repository": "https://github.com/archebase/archebase-design-ir",
+      "repository": "https://github.com/archebase/archebase-design-workspace",
       "tag": null,
-      "commit": "42d3755c82915c7843f2896d17210682c785403d",
+      "commit": "858e27ec6eec7e5a8e9ea104e26a20d1f69bbd0d",
       "required": false,
       "authority": "derived retrieval corpus and design-space tooling only; its records are not VI evidence and must never be cited as brand authority",
-      "resolution": "Resolve from the environment variable ARCHEBASE_DESIGN_IR, else from the sibling directory ../archebase-design-ir relative to this skill, else by cloning the GitHub repository at the pinned commit. Verify git rev-parse HEAD against the pin before using it as the corpus identity; a local checkout is a cache. If unreachable or the identity does not match, stop the Design IR route and record 待确认.",
-      "update_policy": "Advance the pinned commit whenever the store changes (records or tooling), after running the store's own validators (build_index.py, evaluate.py, validate_jspace.py, validate_candidate.py fixtures) and this skill's evals/run_visual_design_benchmark.py. Do not float to main without verifying."
+      "resolution": "Resolve the store directory in this order: the ARCHEBASE_DESIGN_IR environment variable; <skill parent>/archebase-design-workspace/ir (current layout); <skill parent>/archebase-design-ir (legacy sibling layout); $HOME and $HOME/Books variants of both; else clone https://github.com/archebase/archebase-design-workspace at the pinned commit and use its ir/ directory. The index is a build artifact: run ir/build_index.py first. Verify git rev-parse HEAD against the pin before treating the checkout as the corpus identity; if unreachable or mismatched, stop the Design IR route and record 待确认.",
+      "update_policy": "Advance the pinned commit whenever the workspace changes (records, tooling or metadata), after running ir/build_index.py, ir/evaluate.py, ir/validate_jspace.py, ir/validate_candidate.py on the fixtures and this skill's evals/run_visual_design_benchmark.py. Do not float to main without verifying.",
+      "path": "ir/"
     }
   ],
   "non_goals": [

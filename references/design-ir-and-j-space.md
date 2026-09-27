@@ -11,11 +11,12 @@ Design IR store 是品牌事实的**派生消费者**，不是品牌权威：sto
 按以下顺序解析 store 根目录，禁止硬编码任何本机绝对路径：
 
 1. 环境变量 `ARCHEBASE_DESIGN_IR` 指向的目录。
-2. 本 Skill 的同级目录 `archebase-design-ir`（相对本文件即 `../../archebase-design-ir`）。
-3. 从 GitHub `archebase/archebase-design-ir` clone 并按 `skill-dependencies.json` 的 commit 检出。
-4. 以上都不可达时停止该路由并报告 `待确认`，不得凭记忆、猜测或另一台机器的路径继续。
+2. 工作区仓库 `archebase-design-workspace` 的 `ir/` 子目录：本 Skill 的 `../archebase-design-workspace/ir`，以及 `$HOME/Books/archebase-design-workspace/ir`。
+3. 兼容旧布局：同级目录 `archebase-design-ir`（相对本文件即 `../../archebase-design-ir`）。
+4. 从 GitHub `archebase/archebase-design-workspace` clone，按 `skill-dependencies.json` 的 commit 检出，使用其中的 `ir/`。
+5. 以上都不可达时停止该路由并报告 `待确认`，不得凭记忆、猜测或另一台机器的路径继续。
 
-store 的身份必须可核对：`git -C <store> rev-parse HEAD` 必须等于 `skill-dependencies.json` 中 `design-ir-store` 的 pin；不一致时按 `待确认` 停止，不得用旧缓存当语料。
+store 的身份必须可核对：`git -C <store 所在仓库> rev-parse HEAD` 必须等于 `skill-dependencies.json` 中 `design-ir-store` 的 pin；不一致时按 `待确认` 停止，不得用旧缓存当语料。store 是构建产物依赖：索引缺失时先在 `ir/` 下运行 `python3 build_index.py`。
 
 解析成功后，下文提到的工具与数据文件都按 store 相对名引用：`design-ir-schema.yaml`、`build_index.py`、`records.jsonl`、`axes.json`、`query.py`、`jspace.py`、`validate_jspace.py`、`validate_candidate.py`、`inspect_svg.py`、`inspect_raster.py`、`preflight.py`、`JSPACE-CALIBRATION.md`。
 
@@ -52,4 +53,4 @@ store 的身份必须可核对：`git -C <store> rev-parse HEAD` 必须等于 `s
 
 ## 评估与版权
 
-建立 brief→规则、brief→案例、brief→反例、案例→来源的金标准集，测 Recall@k、硬约束误召回率、来源完整率、人工相关性、跨模态检索质量、品牌漂移率和建议可解释率。每次更换模型都回归测试。向量库保留来源与删除记录；不得发布可替代受版权保护原文的 embedding 集合。第三方素材授权默认已取得，本 Skill 不维护许可台账。
+建立 brief→规则、brief→案例、brief→反例、案例→来源的金标准集，测 Recall@k、硬约束误召回率、来源完整率、人工相关性、跨模态检索质量、品牌漂移率和建议可解释率。每次更换模型都回归测试。向量库保留来源与删除记录；不得发布可替代受版权保护原文的 embedding 集合。第三方素材在内部默认按已获授权处理，本 Skill 不维护许可台账；对外发布前由发布方确认授权。
