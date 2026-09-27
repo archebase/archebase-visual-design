@@ -66,7 +66,7 @@ python3 evals/run_visual_design_benchmark.py    # 默认退出码 0（报告模�
 - `count == min(k, pool)`，`pool >= 2`；
 - `pairwise`：按 `axes.json` 的锚点极性声明成对顺序（如 `structural_stability` 正端锚点必须排在负端锚点之前）。
 
-## 当前实测（2026-09-27，12 条记录的语料）
+## 当前实测（2026-09-27，11 条记录的语料）
 
 ```bash
 python3 evals/run_visual_design_benchmark.py
@@ -74,18 +74,18 @@ python3 evals/run_visual_design_benchmark.py
 
 | 案例 | 渠道 | k | pool | 期望失败模式 / 结果 |
 |---|---|---|---|---|
-| retrieval-01…10 | wechat_cover/report/slides/web/poster | 5 | 7–9 | 池 > k，可证伪；当前首位命中 7 例、`rule:grid:modular` 与 `rule:color:perception`/`case:fluid:signal` 为第 2 |
+| retrieval-01…10 | wechat_cover/report/slides/web/poster | 5 | 7–9 | 池 > k，可证伪；首位命中 7 例，`retrieval-02`/`08`/`10` 的期望记录为第 2 |
 | decoy-02-image | slides | 5 | 10 | 当前 `rule:accessibility:semantic` 抢先，已知缺陷 |
 | decoy-03-logo | web | 5 | 4 | 当前 `anti:generic:cyberpunk` 抢先，已知缺陷（纯反例，池 ≥ 2 即可证伪） |
-| jspace-01…04 | — | 5 | 11 | 不变量 + 锚点极性，全部通过；jspace-03 的旧“首位 = case:stable:foundation”断言仅在 `--kind case`（池 = 2）下成立，已删除 |
+| jspace-01…04 | — | 5 | 11 | 不变量 + 锚点极性，全部通过 |
 
-`hit_at_k` 在当前语料上是饱和的（正例 1.0），可证伪信号来自 `first_rank`/`mrr_at_k`（0.7708）、三个反例（`decoy_pass_rate` 0.0）与 `integrity_failures`。数值随语料与排序实现变化，以每次运行的 JSON 输出为准。
+`hit_at_k` 在当前语料上是饱和的（正例 1.0），可证伪信号来自 `first_rank`/`mrr_at_k`（0.8182）、两个反例（`decoy_pass_rate` 0.0）与 `integrity_failures`。数值随语料与排序实现变化，以每次运行的 JSON 输出为准。
 
 不能检测：
 
 - 不是 with/without 因果对比，也不证明任何效果提升；它只说明当前排序在给定案例上是否失败。
 - 排序由 `query.py` 的字符/词项重叠 + bm25 决定，不是 embedding 语义检索；查询接近记录原文，命中率高不证明语义检索能力。
-- 语料只有 12 条记录，其中 case 记录 `status=proposed`、`anti_pattern` 1 条；池小是语料的性质，不是本基准可以掩盖的。
+- 语料只有 11 条记录，其中 case 记录 `status=proposed`、`anti_pattern` 1 条；池小是语料的性质，不是本基准可以掩盖的。
 - 不度量人类视觉质量、渲染产物、上游 VI Guide 正确性。
 
 ## 未执行的协议
