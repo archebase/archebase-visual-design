@@ -23,6 +23,7 @@ import argparse
 import json
 import os
 import re
+import subprocess
 import sys
 from pathlib import Path
 
@@ -31,19 +32,61 @@ DEFAULT_LIMIT = 60
 UPSTREAM_ENV = "ARCHEBASE_VI_GUIDE"
 
 
-def resolve_upstream(explicit: str | None, skill_dir: Path) -> Path | None:
-    candidates: list[Path] = []
+def resolve_upstream(explicit: str | None, skill_dir: Path) -> tuple[Path | None, str]:
+    """解析上游 Skill：要求 SKILL.md 与 tokens；优先与 pin 身份一致的候选。"""
+    candidates: list[tuple[str, Path]] = []
     if explicit:
-        candidates.append(Path(explicit))
+        candidates.append(("--upstream", Path(explicit)))
     env = os.environ.get(UPSTREAM_ENV)
     if env:
-        candidates.append(Path(env))
-    for base in (skill_dir, skill_dir.parent, skill_dir.parent.parent, Path.home(), Path.home() / "Books"):
-        candidates.append(base / "archebase-vi-guide")
-    for candidate in candidates:
-        if (candidate / "SKILL.md").is_file():
-            return candidate
-    return None
+        candidates.append((UPSTREAM_ENV, Path(env)))
+    for label, base in (
+        ("Skill 目录", skill_dir),
+        ("Skill 上级目录", skill_dir.parent),
+        ("Skill 上级目录的上级", skill_dir.parent.parent),
+        ("$HOME", Path.home()),
+        ("$HOME/Books", Path.home() / "Books"),
+    ):
+        candidates.append((label, base / "archebase-vi-guide"))
+
+    pin_tag, pin_commit = pin_from_dependencies(skill_dir)
+    complete: list[tuple[str, Path]] = []
+    for label, candidate in candidates:
+        if (candidate / "SKILL.md").is_file() and (candidate / "tokens" / "archebase.tokens.json").is_file():
+            complete.append((label, candidate))
+    if not complete:
+        return None, ""
+    if pin_commit:
+        for label, candidate in complete:
+            head = git_head(candidate)
+            if head == pin_commit:
+                return candidate, f"{label}（{pin_tag or '?'} / {head[:12]}，与 pin 一致）"
+    label, candidate = complete[0]
+    head = git_head(candidate)
+    if head is None:
+        return candidate, f"{label}（身份不可核对；pin {pin_tag or '?'}）"
+    return candidate, f"{label}（{head[:12]}，与 pin {pin_tag or '?'} 不一致）"
+
+
+def pin_from_dependencies(skill_dir: Path) -> tuple[str | None, str | None]:
+    try:
+        data = json.loads((skill_dir / "skill-dependencies.json").read_text(encoding="utf-8"))
+    except Exception:
+        return None, None
+    for dep in data.get("dependencies", []):
+        if dep.get("name") == "archebase-vi-guide":
+            return dep.get("tag"), dep.get("commit")
+    return None, None
+
+
+def git_head(path: Path) -> str | None:
+    if not (path / ".git").exists():
+        return None
+    try:
+        out = subprocess.run(["git", "-C", str(path), "rev-parse", "HEAD"], capture_output=True, text=True, timeout=15)
+        return out.stdout.strip() if out.returncode == 0 else None
+    except Exception:
+        return None
 
 
 def read_frontmatter_description(skill_md: Path) -> str:
@@ -101,7 +144,7 @@ def main() -> int:
     local_desc = read_frontmatter_description(local_md)
     local_window = window_body(local_desc, limit)
 
-    upstream_dir = resolve_upstream(args.upstream, skill_dir)
+    upstream_dir, upstream_label = resolve_upstream(args.upstream, skill_dir)
     upstream_md = upstream_dir / "SKILL.md" if upstream_dir else None
     upstream_window = ""
     if upstream_md and upstream_md.is_file():
@@ -110,7 +153,7 @@ def main() -> int:
     if args.print_window:
         print(f"loader 描述上限：{limit}（超出部分不参与路由）")
         print(f"[visual-design] 完整 {len(local_desc)} 字符；窗口：{local_window}")
-        print(f"[vi-guide] 窗口：{upstream_window or '（未解析到上游）'}")
+        print(f"[vi-guide] 窗口：{upstream_window or '（未解析到上游）'}；来源：{upstream_label or '未解析'}")
         return 0
 
     key_terms = [t for t in skill_conf["key_terms"]]

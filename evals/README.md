@@ -18,7 +18,7 @@ visual-guide-ab-benchmark.md   A/B 协议正文与 harness 用法
 三个脚本都只读、确定性、无网络；路径解析基于脚本自身位置，因此从任意工作目录调用都可以（下列命令在 Skill 根目录执行）：
 
 ```bash
-python3 evals/check_brand_facts.py              # 退出码 0 一致 / 1 有分歧 / 2 上游不可达
+python3 evals/check_brand_facts.py              # 退出码 0 一致 / 1 有分歧 / 2 上游不可达或身份不可核对
 python3 evals/run_visual_design_benchmark.py    # 默认退出码 0（报告模式）；--strict 在状态为 FAIL 时退出 1
 python3 evals/check_routing.py                  # 退出码 0 无 FAIL / 1 存在 FAIL / 2 依赖不可解析
 python3 evals/run_ab_benchmark.py --plan --out /tmp/ab   # A/B：出运行清单、提示词与盲评表
@@ -28,6 +28,8 @@ python3 evals/run_ab_benchmark.py --plan --out /tmp/ab   # A/B：出运行清单
 
 - 上游 VI Guide：`ARCHEBASE_VI_GUIDE` → Skill 目录/上级目录/上上级目录 → `$HOME` → `$HOME/Books` 下的 `archebase-vi-guide`；
 - Design IR store：`ARCHEBASE_DESIGN_IR` → 同样的候选位置下的 `archebase-design-ir`。
+
+**上游身份必须核对**：本地 clone 只是缓存。候选目录必须完整（`SKILL.md`、`tokens/archebase.tokens.json`、`assets/guide-evidence.json`、`references/visual-grammar.md`、`references/asset-governance.md`），并且 `git rev-parse HEAD` 等于 `skill-dependencies.json` 里 `archebase-vi-guide` 的 pin；解析器会优先选身份与 pin 一致的候选，避免同机上的旧副本被当成权威。身份不一致或不可核对时 `check_brand_facts.py` 按 `待确认` 退出 2（`--allow-unpinned` 可继续做参考比较，结果只能视为待确认）；若上游副本连批准公开名称都读不出来，同样按上游不可用退出 2，而不是判本 Skill 有分歧。
 
 解析不到时报 `待确认` 并以退出码 2 停止——不得用记忆或臆造数据替代。可用 `--upstream` / `--skill` / `--store` / `--cases` 显式覆盖。
 
@@ -62,7 +64,7 @@ python3 evals/run_ab_benchmark.py --plan --out /tmp/ab   # A/B：出运行清单
 - `expect=vi-guide` / `neither` 的用例若命中本 Skill 的 key term → WARN（字面层不可区分，需模型按 `SKILL.md` 分工边界裁决）；标 `ambiguity: true` 的已知难例只报 WARN。
 - 结构性检查：`boundary_terms` 必须存在于 `SKILL.md` 正文；落在窗口外的 key term 会单独列出。
 
-`--limit N` 模拟更严格的 loader；`--print-window` 只打印窗口。脚本只做字面判定，不替代模型裁决。反证：`--limit 30` 时正例立即 FAIL（rc=1），说明检查不是永远通过。
+`--limit N` 模拟更严格的 loader；`--print-window` 只打印窗口并显示上游身份（pin tag/commit 与解析来源）。脚本只做字面判定，不替代模型裁决。反证：`--limit 30` 时正例立即 FAIL（rc=1），说明检查不是永远通过。
 
 ## L1 实测（2026-09-27）
 

@@ -14,6 +14,7 @@ import argparse
 import json
 import os
 import re
+import subprocess
 import sys
 import unicodedata
 from pathlib import Path
@@ -76,17 +77,33 @@ def upstream_candidates(cli_path):
     return out
 
 
-def resolve_upstream(cli_path):
+def resolve_upstream(cli_path, pin_commit=None):
+    """选完整候选；若给了 pin，优先选身份与 pin 一致的候选，其次才用第一个完整候选。
+
+    本地 clone 只是缓存，身份必须可核对：同机可能存在旧副本（例如 /tmp 下的历史导出），
+    不能因为它在候选顺序里靠前就当作权威。
+    """
     tried = []
+    complete = []
     for label, path in upstream_candidates(cli_path):
         if path.is_dir() and all((path / name).is_file() for name in UPSTREAM_REQUIRED):
-            return path, label, tried
+            complete.append((label, path))
+            continue
         if path.is_dir():
             missing = [name for name in UPSTREAM_REQUIRED if not (path / name).is_file()]
             tried.append(f'{label}（缺少 {", ".join(missing)}）')
         else:
             tried.append(f'{label}（不存在）')
-    return None, None, tried
+    if not complete:
+        return None, None, tried
+    if pin_commit:
+        for label, path in complete:
+            head, _ = upstream_identity(path)
+            if head == pin_commit:
+                return path, label, tried
+        tried = [f'{label}（完整但身份与 pin 不一致）' for label, _ in complete] + tried
+    label, path = complete[0]
+    return path, label, tried
 
 
 def die_unresolved(tried):
@@ -410,17 +427,64 @@ def render(rows, columns=(6, 22, 34, 52, None)):
     return '\n'.join(out)
 
 
+def pin_from_dependencies():
+    """从 skill-dependencies.json 读上游 pin（单一来源），返回 (tag, commit)。"""
+    path = SKILL_DIR / 'skill-dependencies.json'
+    try:
+        data = json.loads(path.read_text(encoding='utf-8'))
+    except Exception:
+        return None, None
+    for dep in data.get('dependencies', []):
+        if dep.get('name') == 'archebase-vi-guide':
+            return dep.get('tag'), dep.get('commit')
+    return None, None
+
+
+def upstream_identity(path):
+    """返回 (head_sha, 说明)。本地 clone 只是缓存，身份必须可核对。"""
+    if not (path / '.git').exists():
+        return None, '不是 git 仓库（身份不可核对）'
+    try:
+        head = subprocess.run(['git', '-C', str(path), 'rev-parse', 'HEAD'],
+                              capture_output=True, text=True, timeout=15)
+        if head.returncode != 0:
+            return None, 'git rev-parse 失败'
+        return head.stdout.strip(), ''
+    except Exception as exc:  # pragma: no cover - 环境相关
+        return None, f'git 调用失败：{exc}'
+
+
 def main():
     parser = argparse.ArgumentParser(description='校验本 Skill 重述的品牌事实与上游 VI Guide 是否一致（只读、无网络）')
     parser.add_argument('--skill', default=str(SKILL_DIR), help='Skill 根目录，默认脚本所在 Skill')
     parser.add_argument('--upstream', default=None, help='上游 archebase-vi-guide 路径；默认读 ARCHEBASE_VI_GUIDE 或同级目录')
     parser.add_argument('--all', action='store_true', help='同时输出 OK 行')
+    parser.add_argument('--allow-unpinned', action='store_true',
+                        help='上游身份与 pin 不一致或不可核对时仍继续比较（结果只能视为待确认）')
     args = parser.parse_args()
 
     skill_dir = Path(args.skill).expanduser().resolve()
-    upstream, label, tried = resolve_upstream(args.upstream)
+    pin_tag, pin_commit = pin_from_dependencies()
+    upstream, label, tried = resolve_upstream(args.upstream, pin_commit)
     if upstream is None:
         die_unresolved(tried)
+
+    head, note = upstream_identity(upstream)
+    if pin_commit and head == pin_commit:
+        identity_ok = True
+        identity_text = f'{head}（与 pin 一致）'
+    else:
+        identity_ok = False
+        if head is None:
+            identity_text = f'未核对（{note}；pin {pin_tag or "?"} / {pin_commit or "?"}）'
+        else:
+            identity_text = f'{head}（与 pin {pin_commit or "?"} 不一致）'
+    if not identity_ok and not args.allow_unpinned:
+        print(f'上游：{upstream}（解析自 {label}）')
+        print(f'上游身份：{identity_text}')
+        print('结论：上游缓存的身份与 pin 不一致或不可核对，无法据此判定品牌事实；按待确认停止（退出码 2）。')
+        print('提示：用 --upstream 指向 tag/commit 与 pin 一致的上游 clone，或加 --allow-unpinned 仅做参考比较。')
+        raise SystemExit(2)
 
     facts, grammar_tokens = load_upstream(upstream)
     docs = read_skill(skill_dir)
@@ -435,17 +499,29 @@ def main():
     check_name(docs, facts, rows)
     check_evidence_refs(docs, facts, rows)
     check_unconfirmed(docs, rows)
+    if not identity_ok:
+        rows.insert(0, add('WARN', 'upstream_identity', f'pin {pin_tag} / {pin_commit}',
+                           f'本次使用 {identity_text}，结果只能视为待确认', str(upstream)))
+    # 上游若连批准公开名称都读不出来，说明该副本内容不可用，不能据此判本 Skill 有分歧
+    upstream_unusable = facts.get('approved_name') is None
+    if upstream_unusable:
+        rows.insert(0, add('FAIL', 'upstream_unusable', '上游应可读出批准公开名称',
+                           '该上游副本读不到批准公开名称（版本过旧或文件不完整）', str(upstream / 'references/asset-governance.md')))
 
     fails = [row for row in rows if row[0] == 'FAIL']
     warns = [row for row in rows if row[0] == 'WARN']
     shown = rows if args.all else fails + warns
     print(f'上游：{upstream}（解析自 {label}）')
+    print(f'上游身份：{identity_text}')
     print(f'本 Skill：{skill_dir}')
     print(f'扫描：{len(docs)} 个文件（{", ".join(SCAN_SUFFIXES)}），只读、无网络')
     print()
     print(render(shown) if shown else '（无 FAIL/WARN 行）')
     print()
     print(f'汇总：FAIL {len(fails)} 项，WARN {len(warns)} 项，检查项 {len(rows)} 项')
+    if upstream_unusable:
+        print('结论：上游副本不可用（读不到批准公开名称），结论待确认（退出码 2）；请使用与 pin 一致的上游 clone。')
+        raise SystemExit(2)
     if fails:
         print('结论：发现品牌事实分歧，必须修复后重新运行（退出码 1）。')
         raise SystemExit(1)
