@@ -16,14 +16,21 @@ metadata:
 
 将智域基石的商业和技术内容转化为精确、可信、清晰、具基础设施感的视觉系统。先解决内容、层级和关系，再处理风格与装饰；结合系统构成、沟通设计、留白与感官克制，但以智域基石 VI 为最高视觉约束。
 
+## Dependency contract
+
+- `archebase-vi-guide` is the required base skill for ArcheBase-branded work; this skill is an optional design-method companion, not a replacement.
+- Minimum complete installation: `archebase-vi-guide`. Recommended installation for posters, covers, infographics and visual design critique: install both skills.
+- When both are available, load `archebase-vi-guide` first. It selects the mode and route, owns brand facts, official assets, Guide evidence, channel rules and the final release verdict. This skill then handles content contracts, visual propositions, hierarchy, composition, grid, color application, legibility and design critique.
+- If `archebase-vi-guide` is missing or its pinned identity cannot be verified, block the ArcheBase brand route. Do not invent or reconstruct brand facts, colors, typography, Logo choices or VI approval from memory, local files or this skill.
+- If the user explicitly requests non-branded design, this skill may continue as a general design-method exercise, but it must not use ArcheBase assets or claim VI compliance.
+
 ## When to Use
 
-- 先解析 GitHub 依赖 `https://github.com/archebase/archebase-vi-guide`。当前兼容基线为 tag `v3.5.4`、commit `918d0ec8f05f775d1f34370e0c38fc796da8b83b`；本地 clone 只是缓存，不能成为来源身份。解析步骤：`git clone --branch v3.5.4 https://github.com/archebase/archebase-vi-guide`，再 `git -C archebase-vi-guide rev-parse HEAD` 与该 commit 比对；不一致即停止并记录 `待确认`，不得继续产出。本 Skill 不复制、重建或替代该 VI 权威层。
-- 分工边界：品牌事实、Logo 资产、色值/字体权威值、Guide 页证据、渠道 playbook 与发布门禁的问题以 `archebase-vi-guide` 为准；把内容转成可执行设计方案、构图/网格/字体/信息设计判断与评审由本 Skill 负责。两者同时可用时，品牌事实以上游为准，方法判断以本 Skill 为准；冲突不得取平均，记录冲突并服从上游。
-- 为 ArcheBase / 智域基石设计或审查海报、公众号头图、社媒图、报告封面、活动主视觉、信息图、展板或图像生成 brief。
-- 把文章、产品能力、研究结论、数据流程转成视觉方案。
-- 将现有素材改造成智域基石风格，或判断是否符合 VI。
-- 不用于未经批准修改 Logo、增加品牌色，或编造产品能力、客户、数据与行业地位。
+- For ArcheBase work, use this skill after `archebase-vi-guide` has selected the mode and route.
+- Use it for posters, WeChat covers, social graphics, report covers, event key visuals, infographics, image-generation briefs and visual design reviews when composition and information design require method-layer support.
+- Do not use it as the sole authority for official colors, Logo assets, Guide page evidence, channel hard rules or release decisions.
+- Before design, confirm the upstream identity: tag `v3.5.4`, commit `918d0ec8f05f775d1f34370e0c38fc796da8b83b`. Resolve the GitHub dependency and verify `git rev-parse HEAD`; a local checkout is only a cache.
+- For official color, typography, Logo or Guide-page questions, route to `archebase-vi-guide` instead of answering from this skill.
 
 ## 不可违反的品牌约束
 
@@ -37,6 +44,10 @@ metadata:
 - 版本漂移处理：依赖 tag/commit 变化后，先运行上游 `scripts/` 下九个确定性校验器（`validate_logo_bundle.py`、`validate_asset_integrity.py`、`validate_guide_evidence.py`、`validate_guide_pages.py`、`validate_modes.py`、`validate_tokens.py`、`validate_asset_reference.py`、`check_release_report.py`、`check_doc_links.py`）以及本 Skill 的 `evals/check_brand_facts.py`，全部通过后再更新兼容基线；上游 `evals/evals.json` 没有 runner，不要把它当作可执行套件。
 
 ## 标准流程
+
+### 0. 选择方法边界
+
+涉及引用方法、跨渠道系统、创意偏离或 ArcheBase 调性判断时，先读取 [references/method-fit.md](references/method-fit.md)。涉及官方 VI PDF 的视觉判断、页面证据转译或 `vi-guide` 与本 Skill 的协作时，同时读取 [references/vi-method-fit.md](references/vi-method-fit.md)。这些文件只筛选和转译设计方法，不覆盖 `archebase-vi-guide` 的品牌事实、官方资产、渠道硬规则或发布 verdict。
 
 ### 1. 建立内容契约
 
@@ -68,7 +79,14 @@ metadata:
 
 ### 6. 应用颜色
 
-品牌色只有五个 token；色值、角色、比例与中性级的完整定义与引用见 [references/brand-system.md](references/brand-system.md)（上游 `tokens/archebase.tokens.json`；Guide p.28，evidence `color.ratio`）：`AB_BLUE_1 #0032FF` 主导结构，`AB_BLUE_2 #7172FA` 支撑层次，`AB_BLUE_3 #619AFD` 次级数据层，`AB_BLUE_4 #46CFFF` 信号/流向/深底重点，`AB_CHARCOAL #1E2124` 中性深色与深色场。先用中性深色与白色表面完成结构，再用主品牌蓝建立主导；每种颜色必须有功能解释。白色/浅色表面是应用默认，不是品牌 token。
+颜色事实、色值、比例和语义角色以 `archebase-vi-guide` 为准。模式决定颜色自由度：
+
+- `strict`：只使用上游已批准的五个品牌 token；不新增品牌色。
+- `guided`：默认使用品牌 token；任何非 token 颜色都必须标为渠道/活动扩展色，并记录偏离理由。
+- `creative`：允许为活动或渠道使用扩展色，但不得称为官方品牌色，不得修改官方 Logo，并需由 `archebase-vi-guide` 执行对应模式的发布门禁。
+- `off`：不执行 ArcheBase 品牌色规则，也不得宣称 VI 合规。
+
+五个品牌 token 的色值、角色、比例与中性级完整定义见 [references/brand-system.md](references/brand-system.md)（上游 `tokens/archebase.tokens.json`；Guide p.28，evidence `color.ratio`）：`AB_BLUE_1 #0032FF` 主导结构，`AB_BLUE_2 #7172FA` 支撑层次，`AB_BLUE_3 #619AFD` 次级数据层，`AB_BLUE_4 #46CFFF` 信号/流向/深底重点，`AB_CHARCOAL #1E2124` 中性深色与深色场。先用中性深色与白色表面完成结构，再用主品牌蓝建立主导；每种颜色必须有功能解释。白色/浅色表面是应用默认，不是品牌 token。
 
 ### 7. 整合图像与图形
 
@@ -97,6 +115,14 @@ metadata:
 - 媒介与尺寸：
 - 已知约束：
 - 明示假设：
+
+## VI 协作状态
+- VI 模式：
+- VI 路由：
+- 已采用的官方证据：
+- 由 vi-guide 保留的待确认事项：
+- 本方案的设计方法判断：
+- 是否存在有意偏离：
 
 ## 核心概念
 一句话视觉命题。
@@ -137,12 +163,15 @@ metadata:
 - 内容正确性：
 - 信息层级：
 - 品牌一致性：
-- 无障碍（WCAG 版本/等级/实测对比度）：
-- 来源与素材记录：
-- 最终尺寸与对比度：
 ```
 
 快速建议至少保留：核心概念、层级、颜色角色、字体、构图和禁止项。
+
+## 发布责任
+
+- 本 Skill 输出设计方法与设计 QA；`archebase-vi-guide` 输出官方品牌证据、资产选择、渠道硬规则、claims/rights/export QA 与最终品牌发布 verdict。
+- 两个 Skill 同时可用时，先由 `archebase-vi-guide` 选择 mode 和 route，再由本 Skill 进行方法层设计；制作和渲染后回到 `archebase-vi-guide` 过最终门禁。
+- 本 Skill 不单独输出“VI 合规”或“可发布”结论。
 
 ## 质量门
 
@@ -150,12 +179,12 @@ metadata:
 
 1. **事实正确**：无编造，无伪数据，无未经确认的技术架构暗示。
 2. **构图清晰**：三秒内识别主题；只有一个主导视觉；阅读路径连续；对齐可解释。
-3. **品牌一致**：精确色值和字体角色；至少体现本 Skill 自定的六个母题之一（非 VI 原文，见 [references/brand-system.md](references/brand-system.md)）。
+3. **品牌一致**：使用当前模式允许的精确色值和字体角色；在 `strict`/`guided` 模式下检查适合内容的本 Skill 自定母题，`creative` 模式允许记录后的有意偏离；官方品牌事实与资产规则以 `archebase-vi-guide` 为准。
 4. **生产可靠**：实际尺寸可读；关键意义不只靠颜色；图像裁切、导出规格和渠道兼容已验证。
 5. **无障碍**：按项目声明并记录的 WCAG 版本与等级实测对比度；语义结构、替代文本、字幕，且不只用颜色编码关键含义。
 6. **来源与素材记录**：每个素材与检索候选都有来源、用途和采用/淘汰理由；无法追溯来源的素材未进入交付。
 
-规则冲突时先过 gate 再做偏好取舍。Gate（任一不通过即停止交付，彼此不分先后）：① 事实与用户内容 ② 品牌硬边界（Logo 完整性、公开名称、隐私与客户数据、禁用项）③ 可读性/渠道能力/无障碍。Gate 全部通过后，取舍顺序为：信息层级 → 构图与网格 → 品牌视觉偏好（色彩角色、字体角色、母题）→ 风格 → 装饰。
+规则冲突时先过 gate 再做偏好取舍。Gate（任一不通过即停止交付，彼此不分先后）：①事实与用户内容 ②品牌硬边界（Logo 完整性、公开名称、隐私与客户数据、禁用项）③可读性/渠道能力/无障碍。Gate 全部通过后，取舍顺序为：信息层级 → 构图与网格 → 品牌视觉偏好（色彩角色、字体角色、母题）→ 风格 → 装饰。
 
 ## 渠道路由
 
@@ -169,6 +198,8 @@ metadata:
 - 色彩感知、媒介转换和色彩测试：读取 [references/color-theory.md](references/color-theory.md)。
 - 无障碍与辅助技术交付：读取 [references/accessibility.md](references/accessibility.md)。
 - 品牌色、字体、Logo 角色与母题定义：读取 [references/brand-system.md](references/brand-system.md)（品牌事实的唯一重述处）。
+- VI Guide PDF 视觉判断与双 Skill 协作：读取 [references/vi-method-fit.md](references/vi-method-fit.md)；它是方法转译层，不是第二个品牌权威。
+- 设计方法反刍与一般方法适配：读取 [references/method-fit.md](references/method-fit.md)；当需要判断引用方法是否适合 ArcheBase 调性、跨渠道系统或创意偏离边界时，必须先读此文件。
 - 来源与不可推断边界：读取 [references/source-boundaries.md](references/source-boundaries.md)；素材只记录来源与用途，不在此维护许可台账。
 - 检索候选记录：使用 [templates/retrieval-record.json](templates/retrieval-record.json)；交付前按 [templates/candidate-record.json](templates/candidate-record.json) 记录候选并交给 `validate_candidate.py`。
 - 记录设计决策与验证链：使用 [templates/decision-trace.md](templates/decision-trace.md)。

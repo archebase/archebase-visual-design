@@ -27,11 +27,11 @@
 
 ## Gate C：品牌一致性
 
-- [ ] 色值精确：只用 [brand-system.md](brand-system.md) 中已确认的五个品牌 token（`AB_BLUE_1` `AB_BLUE_2` `AB_BLUE_3` `AB_BLUE_4` `AB_CHARCOAL`；上游 `tokens/archebase.tokens.json`）。白/浅色表面是应用默认，不是品牌 token，不得计入本门。
-- [ ] 字体角色符合 brand-system.md 的已确认字样与字重，未自造字样。
+- [ ] 色值精确：在 `strict` 模式只用 [brand-system.md](brand-system.md) 中已确认的五个品牌 token（`AB_BLUE_1` `AB_BLUE_2` `AB_BLUE_3` `AB_BLUE_4` `AB_CHARCOAL`；上游 `tokens/archebase.tokens.json`）。在 `guided`/`creative` 模式，非 token 颜色必须标为渠道/活动扩展色，不能冒充官方品牌色。白/浅色表面是应用默认，不是品牌 token，不得计入本门。
+- [ ] 字体角色符合 brand-system.md 的已确认字样与字重，未自造字样；模式允许的生产替代和待确认事项由 `archebase-vi-guide` 判定。
 - [ ] 白底小字未使用低对比辅助色。
-- [ ] 至少体现本 Skill 自定的母题之一（非 VI 原文，见 [brand-system.md](brand-system.md)）。
-- [ ] Logo 未变形、改色或添加效果。
+- [ ] 在 `strict`/`guided` 模式下，检查是否使用了至少一个适合内容的本 Skill 自定母题；这是设计质量项，不是 VI 原文条款，也不替代官方证据。`creative` 模式允许有意偏离，但应记录偏离理由。
+- [ ] Logo 未变形、改色或添加效果；官方资产、变体和渲染规则由 `archebase-vi-guide` 负责。
 
 ## Gate D：生产可靠性
 

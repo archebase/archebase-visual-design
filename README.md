@@ -2,7 +2,14 @@
 
 Design-method application layer for ArcheBase / 智域基石. `SKILL.md` is authoritative for agent behaviour; this README is the repository-level orientation only and no agent rule lives here alone.
 
-## Dependency
+## Dependency and installation
+
+`archebase-vi-guide` is the required base skill for ArcheBase brand work. `archebase-visual-design` is the optional design-method companion.
+
+- Minimum installation: install `archebase-vi-guide`.
+- Recommended installation for posters, covers, infographics and visual design critique: install both skills.
+- When both are installed, `archebase-vi-guide` loads first and owns mode selection, route selection, brand facts, official assets, Guide evidence, channel rules and the final release verdict. This skill owns composition, hierarchy, grid, visual direction, color application, legibility and design critique.
+- Do not install or use this skill alone for ArcheBase-branded work. If the base skill is missing or its pinned identity cannot be verified, block the brand route rather than inventing brand facts or claiming VI compliance.
 
 Official brand facts, assets, evidence, tokens, route playbooks, validators and release gates stay upstream:
 
@@ -21,7 +28,8 @@ This repository is the application layer. It does not contain the official VI PD
 
 ```text
 SKILL.md                agent-facing contract: triggers, boundary, workflow, gates
-references/             design methods, brand restatement, source boundaries
+references/             design methods, brand restatement, source boundaries,
+                         general method-fit audit and VI PDF method translation
 templates/              briefs, IR records, retrieval/candidate records, spec, decision trace
 evals/                  runnable regression + brand-fact checker, and an unexecuted A/B protocol
 skill-dependencies.json pinned dependencies and non-goals
