@@ -1,11 +1,11 @@
 ---
 name: archebase-visual-design
-description: "ArcheBase/智域基石 海报、头图、社媒、信息图、报告封面的设计方法与评审；品牌事实以vi-guide为准；构图、网格、字体层级、色彩角色、可读性、无障碍、生产检查、Design IR。本 Skill 只做设计方法层、不复制上游资产。"
+description: "ArcheBase/智域基石 海报、头图、社媒、信息图、报告封面的设计方法与评审；含参考图保真与佩戴几何；品牌事实以vi-guide为准；构图、网格、字体层级、色彩角色、可读性、无障碍、生产检查、Design IR。本 Skill 只做设计方法层、不复制上游资产。"
 license: Proprietary
 platforms: [macos, linux]
 compatibility: "需要文件系统型 Skill loader；Python 3 运行 evals 脚本；可选 rsvg-convert/librsvg 校验 Logo 渲染；Design IR store 由环境变量 ARCHEBASE_DESIGN_IR、同级目录或按 pin clone GitHub archebase/archebase-design-ir 解析，身份不可核对时按待确认停止相关路由。"
 metadata:
-  version: 1.1.0
+  version: 1.2.0
   author: 杨哲轩, Hermes Agent
   hermes:
     tags: [ArcheBase, Graphic-Design, Visual-Design, Brand, VI]
@@ -92,6 +92,8 @@ metadata:
 
 优先真实物理设备、环境局部、传感/空间/行动关系、工程标注、可信数据图和品牌几何母题。避免发光大脑、随机电路板、二进制雨、泛化机器人触屏、伪仪表盘、无意义粒子和默认紫蓝赛博渐变。
 
+当题目要求把**真实器件**（设备、穿戴件、工装）放进人或环境中且不得重绘时，先按 [references/spatial-fidelity.md](references/spatial-fidelity.md) 建立参考契约与几何不变式（一张参考图一个角色、不可变特征、不得复现项、姿态前提、遮挡策略），用 [templates/spatial-fidelity-spec.json](templates/spatial-fidelity-spec.json) 登记并过 Gate G。姿态与几何矛盾时改姿态，不改措辞；不得为展示部件而旋转、抬起或放大器件，也不得把生成的品牌字标当作印刷终稿。
+
 ### 8. 删减与媒介测试
 
 逐项问：是否传递信息、强化层级、建立关系、增强识别？否则删除。随后按以下默认值检查（本 Skill 工作默认值，渠道或供应商规范优先）：
@@ -152,6 +154,10 @@ metadata:
 - 视角与场景：
 - 图形处理：
 - 应避免的俗套：
+- 参考角色与不可变特征：
+- 空间不变式与复核位置：
+- 姿态前提：
+- 遮挡策略：
 
 ## 生产规格
 - 尺寸与比例：
@@ -163,6 +169,7 @@ metadata:
 - 内容正确性：
 - 信息层级：
 - 品牌一致性：
+- 参考保真与空间自洽：
 ```
 
 快速建议至少保留：核心概念、层级、颜色角色、字体、构图和禁止项。
@@ -175,7 +182,7 @@ metadata:
 
 ## 质量门
 
-交付前逐项通过 [references/critique-checklist.md](references/critique-checklist.md)（其 Gate A–F 与本处 1–6 一一对应，两份都必须通过）：
+交付前逐项通过 [references/critique-checklist.md](references/critique-checklist.md)（其 Gate A–G 与本处 1–7 一一对应，两份都必须通过）：
 
 1. **事实正确**：无编造，无伪数据，无未经确认的技术架构暗示。
 2. **构图清晰**：三秒内识别主题；只有一个主导视觉；阅读路径连续；对齐可解释。
@@ -183,8 +190,9 @@ metadata:
 4. **生产可靠**：实际尺寸可读；关键意义不只靠颜色；图像裁切、导出规格和渠道兼容已验证。
 5. **无障碍**：按项目声明并记录的 WCAG 版本与等级实测对比度；语义结构、替代文本、字幕，且不只用颜色编码关键含义。
 6. **来源与素材记录**：每个素材与检索候选都有来源、用途和采用/淘汰理由；无法追溯来源的素材未进入交付。
+7. **参考保真与空间自洽**：题目含真实器件参考图时适用（否则记 `N/A`）——器件未被重绘、简化或替换；每条几何不变式都有复核位置与提示词对应句且状态为 `pass`；姿态与不变式自洽；遮挡按已声明策略允许；生成像素重建的品牌字标未作为印刷终稿（见 [references/spatial-fidelity.md](references/spatial-fidelity.md)）。
 
-规则冲突时先过 gate 再做偏好取舍。Gate（任一不通过即停止交付，彼此不分先后）：①事实与用户内容 ②品牌硬边界（Logo 完整性、公开名称、隐私与客户数据、禁用项）③可读性/渠道能力/无障碍。Gate 全部通过后，取舍顺序为：信息层级 → 构图与网格 → 品牌视觉偏好（色彩角色、字体角色、母题）→ 风格 → 装饰。
+规则冲突时先过 gate 再做偏好取舍。Gate（任一不通过即停止交付，彼此不分先后）：①事实与用户内容（含参考图保真与空间自洽；器件被重绘或几何不自洽一并计入本条）②品牌硬边界（Logo 完整性、公开名称、隐私与客户数据、禁用项）③可读性/渠道能力/无障碍。Gate 全部通过后，取舍顺序为：信息层级 → 构图与网格 → 品牌视觉偏好（色彩角色、字体角色、母题）→ 风格 → 装饰。
 
 ## 渠道路由
 
@@ -195,6 +203,7 @@ metadata:
 - 团队训练、方案探索与评议：读取 [references/exercises-and-critique.md](references/exercises-and-critique.md)。
 - 正文、报告、网页和信息密集版式的可读性判断：读取 [references/legibility.md](references/legibility.md)。
 - 图像、照片、图示、数据图和图文整合：读取 [references/image-and-information-design.md](references/image-and-information-design.md)。
+- 参考图保真与佩戴几何（器件不得重绘、佩戴与接触关系必须可信、需要多轮迭代）：读取 [references/spatial-fidelity.md](references/spatial-fidelity.md)，并用 [templates/spatial-fidelity-spec.json](templates/spatial-fidelity-spec.json) 登记规格。
 - 色彩感知、媒介转换和色彩测试：读取 [references/color-theory.md](references/color-theory.md)。
 - 无障碍与辅助技术交付：读取 [references/accessibility.md](references/accessibility.md)。
 - 品牌色、字体、Logo 角色与母题定义：读取 [references/brand-system.md](references/brand-system.md)（品牌事实的唯一重述处）。
@@ -211,4 +220,4 @@ metadata:
 
 交付必须包含可检查的尺寸、颜色、字体角色、层级与导出格式。若生成实际图片、PDF、PPT 或网页，应在目标尺寸打开检查，并明确记录质量门结果；仅写“符合 VI”不算验证。每项重要视觉选择还应能回溯到内容目标、规则来源、适用条件和验证结果。
 
-可运行的自检：`python3 evals/check_brand_facts.py` 校验本 Skill 重述的品牌事实与上游一致（含五色 token、比例、中性级、字体、公开名称），`python3 evals/run_visual_design_benchmark.py` 跑检索/设计空间回归。两者都读 `ARCHEBASE_VI_GUIDE` / `ARCHEBASE_DESIGN_IR` 或同级目录，缺失时明确报 `待确认` 而不是静默通过。
+可运行的自检：`python3 evals/check_brand_facts.py` 校验本 Skill 重述的品牌事实与上游一致（含五色 token、比例、中性级、字体、公开名称），`python3 evals/check_routing.py` 校验路由用例与 `description` 索引一致，`python3 evals/check_spatial_spec.py --spec <spec.json>` 校验参考图保真与佩戴几何规格（`--self-test` 用内置正反例证明该检查可失败），`python3 evals/run_visual_design_benchmark.py` 跑检索/设计空间回归。它们都读 `ARCHEBASE_VI_GUIDE` / `ARCHEBASE_DESIGN_IR` 或同级目录，缺失时明确报 `待确认` 而不是静默通过。

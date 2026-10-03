@@ -1,0 +1,54 @@
+{
+  "_comment": "参考图保真与佩戴几何规格（spatial-fidelity spec）。复制本文件到项目工作区后填写；本文件本身是模板，不参与交付。字段说明与用法见 references/spatial-fidelity.md；校验：python3 evals/check_spatial_spec.py --spec <本文件>.json",
+  "version": "1",
+  "project": "<项目名，例如 可穿戴数据采集系统 产品手册封面>",
+  "asset": "<资产：封面 / 主图 / 佩戴照 / 现场摄影 brief>",
+  "subject": {
+    "kind": "<device_on_person | device_only | environment>",
+    "description": "<主体：年龄感、身份、服装色系与结构、气质的客观描述>",
+    "pose": "<姿态的 3D 配置。佩戴整机时必填：躯干朝向、双臂角度、前臂是否近水平、手掌朝向。姿态先于措辞。>",
+    "view": "<视角与裁切：前三分之四、头到膝、竖向 4:5 等>"
+  },
+  "references": [
+    {
+      "id": "R1",
+      "role": "<head_device | wrist_left | wrist_right | device_detail | other_device | environment | subject_portrait>",
+      "locator": "<来源描述：项目参考图清单里的资产名，不写本机绝对路径>",
+      "immutable": [
+        "<不可变特征：轮廓、部件数量与相对位置、镜头布局、材料与表面处理、颜色分块、品牌面板、绑带与接口走向、相对比例>"
+      ],
+      "excluded": [
+        "<不得复现：参考图自带背景、假人或支撑物、棚拍布光、水印与字标、演示姿态、无关器材>"
+      ]
+    }
+  ],
+  "invariants": [
+    {
+      "id": "INV-01",
+      "statement": "<关系 + 复核位置 + 判据。例：环平面垂直于前臂轴（腕部局部：环开口应朝向手背或掌心）>",
+      "observation": "<复核时看哪一块画面（可裁切的区域）>",
+      "prompt_clause": "<提示词中对应的原句；没有对应句即视为该不变式未被表达>",
+      "status": "<pending | pass | fail | 待确认>"
+    }
+  ],
+  "posture_geometry_check": {
+    "assertion": "<一句可判真假的话：什么姿态下这些不变式同时成立>",
+    "violates_if": "<什么姿态会使上述不变式无法成立；出现该姿态时改姿态而不是加形容词>"
+  },
+  "occlusion_policy": "<显式遮挡策略。例：镜头可被手掌、手腕或袖口遮挡或背对镜头；不得为露出镜头而改变姿态或翻转器件>",
+  "excluded": [
+    "<全局排除项：额外传感器、装饰性发光、HUD、无关配件等>"
+  ],
+  "candidate_log": [
+    {
+      "id": "A",
+      "changed_variable": "<本轮唯一改动：姿态 / 器件保真 / 背景纯净度 / 光比 / 裁切>",
+      "invariants_failed": ["<失败的不变式 id，无则空数组>"],
+      "reason": "<淘汰或保留理由，以失败的不变式为单位>",
+      "status": "<accepted | rejected | pending>"
+    }
+  ],
+  "known_limits": [
+    "<已知无法消除的偏差，例如 参考壳体本身近似护目镜，只能在保形前提下尽量降低联想；生成像素重建的品牌字标须在印刷稿用官方资产确定性叠加>"
+  ]
+}

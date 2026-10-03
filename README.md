@@ -30,8 +30,8 @@ This repository is the application layer. It does not contain the official VI PD
 SKILL.md                agent-facing contract: triggers, boundary, workflow, gates
 references/             design methods, brand restatement, source boundaries,
                          general method-fit audit and VI PDF method translation
-templates/              briefs, IR records, retrieval/candidate records, spec, decision trace
-evals/                  runnable regression + brand-fact checker, and an unexecuted A/B protocol
+templates/              briefs, IR records, retrieval/candidate records, spec, spatial-fidelity spec, decision trace
+evals/                  runnable regression + brand-fact + spatial-fidelity checker, and an unexecuted A/B protocol
 skill-dependencies.json pinned dependencies and non-goals
 NOTICE.md  LICENSE      notices and licence (internal use)
 ```
@@ -40,10 +40,13 @@ NOTICE.md  LICENSE      notices and licence (internal use)
 
 ```sh
 python3 evals/check_brand_facts.py          # restated brand facts vs the pinned upstream
+python3 evals/check_routing.py             # index-level routing reachability vs the vi-guide boundary
+python3 evals/check_spatial_spec.py --spec <spec.json>   # reference fidelity and worn-geometry spec
+python3 evals/check_spatial_spec.py --self-test          # positive fixtures pass, negative ones must fail
 python3 evals/run_visual_design_benchmark.py # retrieval and design-space regression
 ```
 
-Both read `ARCHEBASE_VI_GUIDE` / `ARCHEBASE_DESIGN_IR`, falling back to sibling directories, and report `待确认` instead of silently passing when a dependency is unreachable.
+All read `ARCHEBASE_VI_GUIDE` / `ARCHEBASE_DESIGN_IR`, falling back to sibling directories, and report `待确认` instead of silently passing when a dependency is unreachable. `check_spatial_spec.py` reads only the spec file it is given (or its bundled fixtures) and needs no dependency at all.
 
 ### Renderer warning
 

@@ -10,7 +10,7 @@
   "skills": {
     "visual-design": {
       "skill_md": "../SKILL.md",
-      "key_terms": ["海报", "头图", "社媒", "信息图", "报告封面", "设计方法", "评审"],
+      "key_terms": ["海报", "头图", "社媒", "信息图", "报告封面", "设计方法", "评审", "参考图保真", "佩戴几何"],
       "boundary_terms": ["vi-guide", "品牌事实"],
       "note": "key_terms 必须在窗口内可见才有意义；boundary_terms 必须至少在 SKILL.md 正文中存在。"
     },
@@ -62,6 +62,18 @@
       "query": "给我一套版面设计方法，讲网格和字体层级",
       "expect": "visual-design",
       "boundary_reason": "SKILL.md 分工边界：构图/网格/字体判断属于本 Skill 的方法层"
+    },
+    {
+      "id": "vd-08-device-fidelity",
+      "query": "评审这组可穿戴设备的佩戴几何和器件保真",
+      "expect": "visual-design",
+      "boundary_reason": "SKILL.md 流程 7 与渠道路由：参考图保真与佩戴几何由本 Skill 负责，方法见 references/spatial-fidelity.md"
+    },
+    {
+      "id": "vd-09-pose-geometry",
+      "query": "评审一下这个佩戴姿态的几何关系，器件总是不对",
+      "expect": "visual-design",
+      "boundary_reason": "SKILL.md 流程 7：姿态与几何不变式由本 Skill 负责，不改措辞而改姿态"
     },
     {
       "id": "vg-01-brand-color",

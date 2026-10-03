@@ -1,11 +1,13 @@
 # evals — 本 Skill 的可运行自检
 
-本目录有三个可运行脚本；其余文件是案例数据与评测协议（A/B 有 harness，但尚未填入实测结果）。
+本目录有四个可运行脚本；其余文件是案例数据与评测协议（A/B 有 harness，但尚未填入实测结果）。
 
 ```text
 check_brand_facts.py           品牌事实一致性（本 Skill ↔ 上游 VI Guide）
 run_visual_design_benchmark.py 检索 + 设计空间回归（读 Design IR store）
 check_routing.py               索引层路由可达性与 vi-guide 边界（读 route_cases.json）
+check_spatial_spec.py          参考图保真与佩戴几何规格校验（读 spatial-spec-cases.json 自检）
+spatial-spec-cases.json        spatial-fidelity 规格的正例与反例（被 check_spatial_spec.py --self-test 消费）
 route_cases.json               路由用例集（正例 / 边界 / 无关 / 已知难例）
 run_ab_benchmark.py            A/B 评测 harness（--plan 出运行清单与盲评表，--score 算指标与 CI）
 visual-design-benchmark.json   检索回归的案例数据（被 run_visual_design_benchmark.py 消费）
@@ -15,12 +17,14 @@ visual-guide-ab-benchmark.md   A/B 协议正文与 harness 用法
 
 ## 运行
 
-三个脚本都只读、确定性、无网络；路径解析基于脚本自身位置，因此从任意工作目录调用都可以（下列命令在 Skill 根目录执行）：
+四个脚本都只读、确定性、无网络；路径解析基于脚本自身位置，因此从任意工作目录调用都可以（下列命令在 Skill 根目录执行）：
 
 ```bash
 python3 evals/check_brand_facts.py              # 退出码 0 一致 / 1 有分歧 / 2 上游不可达或身份不可核对
 python3 evals/run_visual_design_benchmark.py    # 默认退出码 0（报告模式）；--strict 在状态为 FAIL 时退出 1
 python3 evals/check_routing.py                  # 退出码 0 无 FAIL / 1 存在 FAIL / 2 依赖不可解析
+python3 evals/check_spatial_spec.py --spec <spec.json>   # 退出码 0 无 FAIL / 1 存在 FAIL / 2 规格不可解析
+python3 evals/check_spatial_spec.py --self-test          # 正例放行、反例全部拦下才退出 0
 python3 evals/run_ab_benchmark.py --plan --out /tmp/ab   # A/B：出运行清单、提示词与盲评表
 ```
 
@@ -123,6 +127,28 @@ python3 evals/run_visual_design_benchmark.py
 - 排序由 `query.py` 的字符/词项重叠 + bm25 决定，不是 embedding 语义检索；查询接近记录原文，命中率高不证明语义检索能力。
 - 语料只有 11 条记录，其中 case 记录 `status=proposed`、`anti_pattern` 1 条；池小是语料的性质，不是本基准可以掩盖的。
 - 不度量人类视觉质量、渲染产物、上游 VI Guide 正确性。
+
+## check_spatial_spec.py
+
+校验 [templates/spatial-fidelity-spec.json](../templates/spatial-fidelity-spec.json) 规格（参考图保真与佩戴几何；方法见 [references/spatial-fidelity.md](../references/spatial-fidelity.md)）。只读、确定性、无网络、不依赖第三方包：`--spec <spec.json>` 逐项输出 PASS/FAIL/WARN/SKIP，任一 FAIL 退出 1；`--self-test` 跑 [spatial-spec-cases.json](spatial-spec-cases.json) 的正例与反例，反例未被拦下即退出 1。
+
+能检测（每条都有对应反例证明可失败）：
+
+- 必填字段齐全；`subject.kind` 合法。
+- `device_on_person` 必须声明 `subject.pose`（姿态优先）与 `posture_geometry_check.violates_if`（什么姿态使不变式失效），且至少有一个器件角色参考。
+- 参考角色取值合法、id 唯一；每个角色都登记了不可变特征与不得复现项。
+- 不变式 id 唯一，且每条都同时有 statement / observation / prompt_clause 和合法状态。
+- 不可证伪表述（“更真实/更自然/更高级”等）不能充当判据。
+- 为展示器件而要求“确保镜头/相机可见、露出、朝前”的措辞判 FAIL——应改姿态或接受遮挡。
+- 规格中出现本机绝对路径判 FAIL（规格必须能跨机器复现）。
+- 交付门：存在 `accepted` 候选时，不得仍有 `fail` 状态的不变式或该候选的失败不变式。
+- 未批准的品牌名称写法。
+
+`known_limits` 为空只报 WARN：任何真实器件复刻都有无法消除的偏差，应如实登记而不是声称完美。
+
+不能检测（不要据此声称更宽的正确性）：器件是否真的与参考图一致、不变式判据在物理上是否正确、所选姿态是否真的能让全部不变式同时成立。这些只能靠按 `observation` 指定的位置裁切复核与人工评审；本脚本只保证规格可复核、可追溯、不自相矛盾。
+
+退出码：0 = 无 FAIL；1 = 存在 FAIL 或自检不符预期；2 = 规格不可解析。
 
 ## A/B 协议与 harness
 

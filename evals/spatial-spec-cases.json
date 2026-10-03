@@ -1,0 +1,252 @@
+{
+  "_comment": "evals/check_spatial_spec.py 的自检用例。正例必须放行，反例必须被指定规则拦下（expect_codes 需出现在 FAIL 码里）。反例用 inherit + patch 只改动一处，以便证明每条规则各自可失败。",
+  "cases": [
+    {
+      "name": "worn-device-cover（正例）",
+      "expect": "pass",
+      "spec": {
+        "version": "1",
+        "project": "可穿戴数据采集系统 产品手册封面",
+        "asset": "竖版 4:5 封面主图",
+        "subject": {
+          "kind": "device_on_person",
+          "description": "成年中国女性，深藏青技术服装，克制专业的表情",
+          "pose": "躯干朝左前三分之四、面部转向右侧；双臂自然下垂至髋前，双前臂接近水平、掌心向下，双腕与躯干分离",
+          "view": "前三分之四、头到膝、竖向 4:5，左侧留白"
+        },
+        "references": [
+          {
+            "id": "R1",
+            "role": "head_device",
+            "locator": "项目参考图清单 R1：头戴设备正面照",
+            "immutable": ["壳体轮廓与宽扁比例", "六目布局与大小镜头相对位置", "哑光黑表面与亮面品牌面板", "顶带与侧臂走向"],
+            "excluded": ["产品图白底", "棚拍布光", "把手持设备的演示角度当作佩戴角度"]
+          },
+          {
+            "id": "R2",
+            "role": "wrist_left",
+            "locator": "项目参考图清单 R2：腕部器件正面照",
+            "immutable": ["环体形状与开口方向", "模块接在环的最低点并沿环平面内延伸", "按钮数量与排列"],
+            "excluded": ["参考图背景", "悬浮展示姿态"]
+          },
+          {
+            "id": "R3",
+            "role": "wrist_right",
+            "locator": "项目参考图清单 R3：腕部器件背面照",
+            "immutable": ["镜头位于模块远端端面", "绑带走向"],
+            "excluded": ["参考图背景"]
+          }
+        ],
+        "invariants": [
+          {
+            "id": "INV-01",
+            "statement": "环平面垂直于前臂轴（腕部局部：环开口应朝向手背或掌心，而不是画面上方）",
+            "observation": "双腕局部裁切",
+            "prompt_clause": "rigid ring band circles the wrist with its plane perpendicular to the forearm axis",
+            "status": "pass"
+          },
+          {
+            "id": "INV-02",
+            "statement": "模块接在环的最低点，沿环平面内的方向悬挂，不得从环平面里拧出来",
+            "observation": "环体与模块的连接处裁切",
+            "prompt_clause": "small camera module hangs downward from the lowest arc of the ring, staying in the ring plane",
+            "status": "pass"
+          },
+          {
+            "id": "INV-03",
+            "statement": "镜头光轴落在环平面内（径向朝外），不在环法线上",
+            "observation": "腕部局部裁切",
+            "prompt_clause": "the lens axis lies in the ring plane pointing radially outward",
+            "status": "pass"
+          },
+          {
+            "id": "INV-04",
+            "statement": "壳体正面下缘高于眉弓，双眼与完整面部可见",
+            "observation": "面部与额头裁切",
+            "prompt_clause": "device sits on the upper forehead well above the eyebrows, both eyes fully visible",
+            "status": "pass"
+          },
+          {
+            "id": "INV-05",
+            "statement": "绑带绕腕一周并从外侧压住环体，接触处有压力痕迹",
+            "observation": "腕部局部裁切",
+            "prompt_clause": "a strap wraps once around the wrist and presses the ring against the skin",
+            "status": "pass"
+          }
+        ],
+        "posture_geometry_check": {
+          "assertion": "双前臂接近水平时，环面竖直、模块自然垂挂且与环共面，镜头径向朝外",
+          "violates_if": "前臂接近竖直时环面近水平，模块只能横向支出，与 INV-02 矛盾"
+        },
+        "occlusion_policy": "腕部器件允许被手掌、手腕或袖口部分挡住，也可背对镜头或失焦；不得为显示器件而改变姿态或翻转器件朝向",
+        "excluded": ["额外传感器", "装饰性发光与全息界面", "眼镜、耳机、帽子", "画面内文字与水印"],
+        "candidate_log": [
+          {
+            "id": "E",
+            "changed_variable": "器件保真措辞",
+            "invariants_failed": ["INV-02"],
+            "reason": "前臂近竖直导致环面近水平，模块横向支出",
+            "status": "rejected"
+          },
+          {
+            "id": "I",
+            "changed_variable": "姿态：双前臂改为接近水平",
+            "invariants_failed": [],
+            "reason": "环面转竖直，模块自然垂挂且与环共面",
+            "status": "accepted"
+          }
+        ],
+        "known_limits": [
+          "参考壳体本身近似护目镜，只能在保形前提下降低联想",
+          "品牌字标由生成像素重建，印刷交付须用官方资产确定性叠加"
+        ]
+      }
+    },
+    {
+      "name": "device-only-product-shot（正例）",
+      "expect": "pass",
+      "spec": {
+        "version": "1",
+        "project": "腕部器件 单品棚拍",
+        "asset": "产品单品图",
+        "subject": {
+          "kind": "device_only",
+          "description": "腕部器件单品，无人物",
+          "view": "四分之三视角，居中"
+        },
+        "references": [
+          {
+            "id": "R1",
+            "role": "device_detail",
+            "locator": "项目参考图清单 R1：腕部器件正面照",
+            "immutable": ["环体形状", "模块与环的连接位置", "按钮排列"],
+            "excluded": ["参考图背景", "假人手腕"]
+          }
+        ],
+        "invariants": [
+          {
+            "id": "INV-01",
+            "statement": "模块接在环的最低点并沿环平面内延伸",
+            "observation": "整体",
+            "prompt_clause": "module attached at the lowest arc of the ring, extending within the ring plane",
+            "status": "pass"
+          }
+        ],
+        "posture_geometry_check": {
+          "assertion": "无佩戴主体，器件按参考图自身角度呈现"
+        },
+        "occlusion_policy": "单品图不得有遮挡",
+        "excluded": ["额外配件"],
+        "candidate_log": [
+          {
+            "id": "A",
+            "changed_variable": "基线",
+            "invariants_failed": [],
+            "reason": "几何与参考一致",
+            "status": "accepted"
+          }
+        ],
+        "known_limits": ["单品假体无法体现绑带在皮肤上的压力"]
+      }
+    },
+    {
+      "name": "反例：佩戴任务未声明姿态",
+      "expect": "fail",
+      "expect_codes": ["S3"],
+      "inherit": "worn-device-cover（正例）",
+      "patch": {
+        "subject": {
+          "kind": "device_on_person",
+          "description": "成年中国女性，深藏青技术服装",
+          "pose": "",
+          "view": "前三分之四、头到膝"
+        }
+      }
+    },
+    {
+      "name": "反例：不变式不可证伪",
+      "expect": "fail",
+      "expect_codes": ["S9"],
+      "inherit": "worn-device-cover（正例）",
+      "patch": {
+        "invariants": [
+          {
+            "id": "INV-01",
+            "statement": "腕部器件看起来更真实自然，更有质感",
+            "observation": "整张图",
+            "prompt_clause": "look real and natural",
+            "status": "pass"
+          }
+        ]
+      }
+    },
+    {
+      "name": "反例：参考角色未登记不得复现项",
+      "expect": "fail",
+      "expect_codes": ["S6"],
+      "inherit": "worn-device-cover（正例）",
+      "patch": {
+        "references": [
+          {
+            "id": "R1",
+            "role": "head_device",
+            "locator": "项目参考图清单 R1：头戴设备正面照",
+            "immutable": ["壳体轮廓", "六目布局"]
+          }
+        ]
+      }
+    },
+    {
+      "name": "反例：为展示器件扭曲姿态",
+      "expect": "fail",
+      "expect_codes": ["S15"],
+      "inherit": "worn-device-cover（正例）",
+      "patch": {
+        "occlusion_policy": "必须确保镜头可见并朝向镜头，必要时抬高手腕"
+      }
+    },
+    {
+      "name": "反例：规格写死本机绝对路径",
+      "expect": "fail",
+      "expect_codes": ["S16"],
+      "inherit": "worn-device-cover（正例）",
+      "patch": {
+        "references": [
+          {
+            "id": "R1",
+            "role": "head_device",
+            "locator": "/Users/designer/project/refs/head.png",
+            "immutable": ["壳体轮廓", "六目布局"],
+            "excluded": ["产品图白底"]
+          }
+        ]
+      }
+    },
+    {
+      "name": "反例：已采纳候选仍带失败不变式",
+      "expect": "fail",
+      "expect_codes": ["S13"],
+      "inherit": "worn-device-cover（正例）",
+      "patch": {
+        "invariants": [
+          {
+            "id": "INV-02",
+            "statement": "模块接在环的最低点，沿环平面内的方向悬挂",
+            "observation": "环体与模块的连接处裁切",
+            "prompt_clause": "module hangs from the lowest arc of the ring",
+            "status": "fail"
+          }
+        ],
+        "candidate_log": [
+          {
+            "id": "I",
+            "changed_variable": "姿态：双前臂改为接近水平",
+            "invariants_failed": [],
+            "reason": "看起来更好",
+            "status": "accepted"
+          }
+        ]
+      }
+    }
+  ]
+}
