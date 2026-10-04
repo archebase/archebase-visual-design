@@ -70,7 +70,7 @@ record:
     - "泛化 AI 母题：发光大脑、随机电路板、二进制雨、伪仪表盘（见 `../references/brand-system.md` 禁止项）"
     - "用低对比辅助蓝承接白底小字（见 `../references/critique-checklist.md` Gate C）"
   validation:
-    methods: ["`../references/critique-checklist.md` 的六道质量门（Gate A–F）", "validate_candidate.py", "preflight.py", "实际尺寸与灰度检查"]
+    methods: ["`../references/critique-checklist.md` 的七道质量门（Gate A–G）", "validate_candidate.py", "preflight.py", "实际尺寸与灰度检查"]
     result: proposed
   embedding_ref:
     # 未生成 embedding 时为 null；一旦入索引必须回填真实值，禁止静默混用模型版本

@@ -51,6 +51,16 @@
 - 坐标/节点/流向：
 - 线宽与最小可读尺寸：
 
+## Logo 使用（上游运营规则；数值以 [logo-usage-rules.md](../references/logo-usage-rules.md) 与 [logo-combination-matrix.md](../references/logo-combination-matrix.md) 为准，本文件不复述）
+- 资产文件与尺寸档（标准档 / `小尺寸A` / `小尺寸B`）：
+- 图形标实际宽度 vs 屏幕下限与该印刷工艺下限：
+- 四周安全带（按图形标高度计）：
+- 组合与间距（横版净间距、字标块对齐；竖版是否整块缩放且未单独调间距）：
+- 底色与色族（深色底是否只用白色族；`黑色渐变` 是否仅浅色底且未与单色 `黑色` 同版同层）：
+- 印刷工艺与色族限制（渐变族禁用工艺是否已避开）：
+- 出图方式（SVG 渲染；未放大 `png-hires` 位图）：
+- 分色值状态（未定义时不得自定；见 [production-preflight.md](../references/production-preflight.md)）：
+
 ## 可访问性
 - 声明的 WCAG 版本：
 - 目标等级：必须逐项目声明并记录依据，不得默认假定为 AA
@@ -72,3 +82,4 @@
 - 生产可靠：
 - 可访问性：
 - 来源与权利：
+- 参考保真与空间自洽：
