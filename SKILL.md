@@ -5,7 +5,7 @@ license: Proprietary
 platforms: [macos, linux]
 compatibility: "需要文件系统型 Skill loader；Python 3 运行 evals 脚本；可选 rsvg-convert/librsvg 校验 Logo 渲染；Design IR store 由环境变量 ARCHEBASE_DESIGN_IR、同级目录或按 pin clone GitHub archebase/archebase-design-ir 解析，身份不可核对时按待确认停止相关路由。"
 metadata:
-  version: 1.2.0
+  version: 1.3.0
   author: 杨哲轩, Hermes Agent
   hermes:
     tags: [ArcheBase, Graphic-Design, Visual-Design, Brand, VI]
@@ -29,7 +29,7 @@ metadata:
 - For ArcheBase work, use this skill after `archebase-vi-guide` has selected the mode and route.
 - Use it for posters, WeChat covers, social graphics, report covers, event key visuals, infographics, image-generation briefs and visual design reviews when composition and information design require method-layer support.
 - Do not use it as the sole authority for official colors, Logo assets, Guide page evidence, channel hard rules or release decisions.
-- Before design, confirm the upstream identity: tag `v3.5.4`, commit `918d0ec8f05f775d1f34370e0c38fc796da8b83b`. Resolve the GitHub dependency and verify `git rev-parse HEAD`; a local checkout is only a cache.
+- Before design, confirm the upstream identity: tag `v3.5.10`, commit `16b6e361fcd760bb8dc2c9b72e39debddaeecf54`. Resolve the GitHub dependency and verify `git rev-parse HEAD`; a local checkout is only a cache.
 - For official color, typography, Logo or Guide-page questions, route to `archebase-vi-guide` instead of answering from this skill.
 
 ## 不可违反的品牌约束
@@ -38,10 +38,14 @@ metadata:
 
 - 公开名称只用 `ArcheBase`；`archebase` 仅用于 GitHub 组织、仓库和技术路径；不得引入未批准的 lockup 或域名命名（上游 `references/asset-governance.md`）。
 - Logo 只用 `智域基石 Logo V2` 交付的资产，不得重绘、重新配色、拉伸或加效果；圆形或可能被圆形裁切的表面使用 `方圆通用` 变体，不得由 `方形` 缩放或遮罩生成；渐变 Logo 必须用 `rsvg-convert`/浏览器渲染或直接使用捆绑 PNG，不得使用 ImageMagick 内部 SVG 渲染器（上游 `references/logo-asset-resolver.md`）。
+- Logo 尺寸、安全带、组合间距与字标对齐取上游运营规则：图形标最小 48 px、四周安全带 0.5 × 图形标高度（绝对下限 0.25×）、横版组合净间距 0.20 × 图形标高度且字标块纵向居中、竖版组合整块等比缩放（不得单独调间距）、低于下限改用 `小尺寸A`/`小尺寸B` 专用版而不是缩放原图。这些是**资产实测运营规则，不是 VI Guide 规定**，产出物中不得表述为「VI Guide 规定」（上游 `references/logo-usage-rules.md`；`assets/guide-evidence.json` 的 `operational_rules.must_not_claim`）。
+- Logo 组合只能用上游授权矩阵列出的组合；未列出的组合属于签发范围而不是缺资产，不得用旧世代文件、缩放或重绘补齐；第 6 个色值 `黑色渐变` 仅浅色底、不得与单色 `黑色` 同版同层混用，且没有 Guide 页面证据（上游 `references/logo-combination-matrix.md`、`assets/logo-combination-matrix.json`）。
+- Logo 用色与底：标志蓝就是品牌主蓝 `AB_BLUE_1`，不存在第二个 logo 蓝（历史物料上的非 token 蓝按待换版处理，不得反向改写资产）；深色底只用白色族（黑色族在深色场上对比度不足）；`白底` 与透明底资产不可互替；CMYK 与专色分色值未定义，不得自行指定并写入交付文件（上游 `references/logo-usage-rules.md`）。
+- 大尺寸与印刷一律由 SVG 出图（上游 `scripts/render_logo.sh`）；`png-hires/` 只是覆盖 4 个组合的离线便利包，不得放大位图充作大尺寸交付；工艺落在渐变族禁用范围（小尺寸胶印、丝网、烫金、激光雕刻、刺绣、贴纸/标签）时必须改用单色族（上游 `references/logo-usage-rules.md`）。
 - 品牌色只有上游 `tokens/archebase.tokens.json` 的五个 token；不得新增品牌色。白色/浅色表面是应用默认，不是品牌 token。
 - 不得编造产品能力、客户、数据、指标、行业地位或技术架构，也不得使用未经确认的公开宣称。
 - 客户数据与个人隐私未确认时不得对外交付；第三方素材在内部默认按已获授权处理，本 Skill 不维护许可台账；对外发布前由发布方确认授权。
-- 版本漂移处理：依赖 tag/commit 变化后，先运行上游 `scripts/` 下九个确定性校验器（`validate_logo_bundle.py`、`validate_asset_integrity.py`、`validate_guide_evidence.py`、`validate_guide_pages.py`、`validate_modes.py`、`validate_tokens.py`、`validate_asset_reference.py`、`check_release_report.py`、`check_doc_links.py`）以及本 Skill 的 `evals/check_brand_facts.py`，全部通过后再更新兼容基线；上游 `evals/evals.json` 没有 runner，不要把它当作可执行套件。
+- 版本漂移处理：依赖 tag/commit 变化后，先运行上游 `scripts/` 下九个确定性校验器（`validate_logo_bundle.py`、`validate_asset_integrity.py`、`validate_guide_evidence.py`、`validate_guide_pages.py`、`validate_modes.py`、`validate_tokens.py`、`validate_asset_reference.py`、`check_release_report.py`、`check_doc_links.py`）以及本 Skill 的 `evals/check_brand_facts.py`，全部通过后再更新兼容基线；身份核对以 `git rev-parse HEAD` 为准，候选副本还必须含 `references/logo-usage-rules.md` 与 `references/logo-combination-matrix.md`（`evals/check_brand_facts.py` 已把两者列入完整性门槛，v3.5.4 及更早副本会因此判为身份不符）；上游 `evals/evals.json` 没有 runner，不要把它当作可执行套件。
 
 ## 标准流程
 
@@ -104,6 +108,7 @@ metadata:
 - **最长文案**：按已给文案字符数 ×1.5 或渠道提供的最长变体（取更严者）重排，不得溢出、不得覆盖关键对象、不得触发非预期换行。
 - **缺图状态**：去掉图片后版面仍成立——不得留空框、占位灰块或塌陷的间距。
 - **印刷**：出血、安全区、最小字号与最小线宽见 [references/production-preflight.md](references/production-preflight.md) 的默认值，供应商规范优先。
+- **Logo 运营规则**：图形标宽度与四周安全带是否达上游下限、低于下限是否改用小尺寸专用版（而不是缩放原图）；组合是否来自上游授权矩阵、横版间距与字标对齐是否按官方交付、竖版间距是否未被自行调整；印刷工艺是否落在允许色族内、是否未擅自填分色值（上游 `references/logo-usage-rules.md`、`references/logo-combination-matrix.md`；本 Skill 不复述全部数值）。
 
 ## 输出合同
 
@@ -220,4 +225,4 @@ metadata:
 
 交付必须包含可检查的尺寸、颜色、字体角色、层级与导出格式。若生成实际图片、PDF、PPT 或网页，应在目标尺寸打开检查，并明确记录质量门结果；仅写“符合 VI”不算验证。每项重要视觉选择还应能回溯到内容目标、规则来源、适用条件和验证结果。
 
-可运行的自检：`python3 evals/check_brand_facts.py` 校验本 Skill 重述的品牌事实与上游一致（含五色 token、比例、中性级、字体、公开名称），`python3 evals/check_routing.py` 校验路由用例与 `description` 索引一致，`python3 evals/check_spatial_spec.py --spec <spec.json>` 校验参考图保真与佩戴几何规格（`--self-test` 用内置正反例证明该检查可失败），`python3 evals/run_visual_design_benchmark.py` 跑检索/设计空间回归。它们都读 `ARCHEBASE_VI_GUIDE` / `ARCHEBASE_DESIGN_IR` 或同级目录，缺失时明确报 `待确认` 而不是静默通过。
+可运行的自检：`python3 evals/check_brand_facts.py` 校验本 Skill 重述的品牌事实与上游一致（含五色 token、比例、中性级、字体、公开名称，以及 Logo 运营规则的来源标注与 Guide 证据边界），`python3 evals/check_routing.py` 校验路由用例与 `description` 索引一致，`python3 evals/check_spatial_spec.py --spec <spec.json>` 校验参考图保真与佩戴几何规格（`--self-test` 用内置正反例证明该检查可失败），`python3 evals/run_visual_design_benchmark.py` 跑检索/设计空间回归。它们都读 `ARCHEBASE_VI_GUIDE` / `ARCHEBASE_DESIGN_IR` 或同级目录，缺失时明确报 `待确认` 而不是静默通过。

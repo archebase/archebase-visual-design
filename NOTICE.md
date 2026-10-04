@@ -6,7 +6,7 @@ ArcheBase brand facts, official assets, evidence, tokens, route playbooks, valid
 
 https://github.com/archebase/archebase-vi-guide
 
-Pinned baseline: tag `v3.5.4`, commit `918d0ec8f05f775d1f34370e0c38fc796da8b83b`. This repository references that dependency but does not include or redistribute its proprietary assets.
+Pinned baseline: tag `v3.5.10`, commit `16b6e361fcd760bb8dc2c9b72e39debddaeecf54`. This repository references that dependency but does not include or redistribute its proprietary assets.
 
 ## Other declared dependencies
 

@@ -95,7 +95,17 @@ ArcheBase / 智域基石是 Physical AI 的数据基础设施：把复杂物理�
 - 圆形展示面或任何可能被圆形裁切的场景必须使用 `方圆通用` 变体（如 `蓝色纯色_无文字_方圆通用_图形标.svg`）；不得缩放或遮罩裁剪 `方形` 变体（上游 `references/logo-asset-resolver.md:42`）。
 - 渐变标必须用 `rsvg-convert` 或浏览器引擎栅格化；禁止 ImageMagick 内置 SVG 渲染器；可直接使用随附 PNG（上游 `references/logo-asset-resolver.md:47-53`）。
 
-待确认：Logo 安全区、最小尺寸、组合锁定参数（上游 `tokens/archebase.tokens.json` 的 `unconfirmed`）。缺少正式参数时使用 VI 原文件中的现成资产。
+### Logo 运营规则（资产实测，不是 Guide 条文）
+
+上游 `v3.5.10` 签发运营规则文件 `references/logo-usage-rules.md` 与授权组合矩阵 `references/logo-combination-matrix.md`（机器可读 `assets/logo-combination-matrix.json`），覆盖图形标最小尺寸与专用尺寸档、四周安全带、横竖版组合间距与字标对齐、深浅底色族限制、`白底` 与透明底不可互替、印刷工艺禁用与最小宽度下限、大尺寸由 SVG 出图。
+
+- 这些数值来自已批准 `智域基石 Logo V2` 资产的实测，**不是** VI Guide 页面证据（Guide `logo.forms` 只列 5 种形式）；产出物中不得表述为「VI Guide 规定」（上游 `assets/guide-evidence.json` 的 `operational_rules.must_not_claim`）。
+- 本文件不复述具体数值：设计稿按上游规则文件核对，冲突时以上游为准，规则自身的签发状态字段以上游为准。
+- 标志蓝就是品牌主蓝 `AB_BLUE_1`（token 表第一行），不存在第二个 logo 蓝：历史物料上的非 token 蓝按上游规则处理为待换版，不得反向改写资产。
+- 组合范围只有矩阵列出的组合；`黑色渐变` 是 owner 签发的本地增补，没有 Guide 页面证据，仅浅色底可用、深色底禁用，且不得与单色 `黑色` 同版同层混用。
+- 深色底只用白色族；CMYK/专色分色值上游未定义，不得擅自指定。
+
+待确认（Guide 未定义，仍不得臆造）：Logo 安全区与最小尺寸的 Guide 条文、组合锁定的域名应用、CMYK 与专色分色值（上游 `tokens/archebase.tokens.json` 的 `unconfirmed`）。缺少正式参数时使用 VI 原文件中的现成资产。
 
 ## 禁止项
 

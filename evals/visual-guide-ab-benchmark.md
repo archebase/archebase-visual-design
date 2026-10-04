@@ -74,7 +74,7 @@ A/B 到 X/Y 的映射由 `--seed` 随机决定，只写在 `blind-map.json`。
 ## Conditions
 
 - **A — baseline（单一基线）：** 同一模型、提示、文件与工具；不加载 `archebase/archebase-vi-guide`，也不加载任何 ArcheBase 专用视觉 Skill。
-- **B — VI-guided：** 与 A 完全相同的模型、提示、文件与工具；额外加载锁定的上游 VI Skill：tag `v3.5.4`，commit `918d0ec8f05f775d1f34370e0c38fc796da8b83b`。
+- **B — VI-guided：** 与 A 完全相同的模型、提示、文件与工具；额外加载锁定的上游 VI Skill：tag `v3.5.10`，commit `16b6e361fcd760bb8dc2c9b72e39debddaeecf54`。该基线自 `v3.5.5` 起含资产实测的 Logo 运营规则与授权组合矩阵，`v3.5.10` 重新签发了渐变族与小尺寸资产。
 
 提示词由 harness 渲染：条件横幅只陈述“本次加载了什么”，不含任何假设方向或预期优劣；A/B 的
 **任务正文逐字节相同**，因此 `prompt_hash`（sha256 of 任务正文）两侧一致、可用于配对校验，

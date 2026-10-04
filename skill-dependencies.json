@@ -2,19 +2,19 @@
   "schema_version": "1.1",
   "skill": {
     "name": "archebase-visual-design",
-    "version": "1.2.0",
+    "version": "1.3.0",
     "role": "design-method application layer"
   },
   "dependencies": [
     {
       "name": "archebase-vi-guide",
       "repository": "https://github.com/archebase/archebase-vi-guide",
-      "tag": "v3.5.4",
-      "commit": "918d0ec8f05f775d1f34370e0c38fc796da8b83b",
+      "tag": "v3.5.10",
+      "commit": "16b6e361fcd760bb8dc2c9b72e39debddaeecf54",
       "required": true,
-      "authority": "brand facts, official assets, evidence, tokens, route playbooks and release gates",
-      "resolution": "Install or clone from the GitHub repository with --branch v3.5.4 and verify rev-parse HEAD against the pinned commit. A local filesystem checkout is a cache, not the canonical identity.",
-      "update_policy": "Do not float to main. Update tag/commit only after running the nine upstream validators named in SKILL.md plus evals/check_brand_facts.py and evals/run_visual_design_benchmark.py."
+      "authority": "brand facts, official assets, evidence, tokens, route playbooks, Logo operating rules, the authorised-combination matrix and release gates",
+      "resolution": "Install or clone from the GitHub repository with --branch v3.5.10 and verify rev-parse HEAD against the pinned commit. A local filesystem checkout is a cache, not the canonical identity.",
+      "update_policy": "Do not float to main. Update tag/commit only after running the nine upstream validators named in SKILL.md plus evals/check_brand_facts.py and evals/run_visual_design_benchmark.py, and after confirming the resolved checkout carries references/logo-usage-rules.md and references/logo-combination-matrix.md (the identity gate in evals/check_brand_facts.py requires them)."
     },
     {
       "name": "archebase-wechat-layout",
@@ -42,6 +42,7 @@
     "Do not copy the VI skill into this repository.",
     "Do not vendor VI tokens, evidence, logos, validators or release gates.",
     "Do not reconstruct brand facts from local PDFs, CSS, marketing material or memory.",
-    "Do not treat the Design IR store, its annotations or its embeddings as brand authority."
+    "Do not treat the Design IR store, its annotations or its embeddings as brand authority.",
+    "Do not restate the upstream Logo operating rules as VI Guide facts: they are measured from the approved V2 assets (upstream references/logo-usage-rules.md) and carry upstream's own must_not_claim."
   ]
 }

@@ -4,16 +4,16 @@
 
 本文件把官方《智域基石 VI 基础》PDF及其已验证页面记录中的**视觉判断**转译为 `archebase-visual-design` 可执行的方法。它不复制 VI Guide 的品牌事实、资产清单、Logo resolver、渠道硬规则或发布门禁；这些仍由 `archebase-vi-guide` 权威负责。
 
-来源身份：`archebase/archebase-vi-guide`，tag `v3.5.4`，commit `918d0ec8f05f775d1f34370e0c38fc796da8b83b`；官方 PDF SHA-256 `80680405ee05512878f5ecadc50cf32975d5a5d18c81b1ea17bcc8ad681493cb`。
+来源身份：`archebase/archebase-vi-guide`，tag `v3.5.10`，commit `16b6e361fcd760bb8dc2c9b72e39debddaeecf54`；官方 PDF SHA-256 `80680405ee05512878f5ecadc50cf32975d5a5d18c81b1ea17bcc8ad681493cb`。
 
 ## PDF 证据盘点
 
 | Guide 页面 | 可转译的设计方法 | 证据边界 |
 |---|---|---|
-| pp.1–5 Logo forms | 识别资产应作为不可变系统元素处理；构图先给资产留出真实上下文和对比度 | 不能从页面推断安全区、最小尺寸或自行重绘方式 |
+| pp.1–5 Logo forms | 识别资产应作为不可变系统元素处理；构图先给资产留出真实上下文和对比度 | 不能从页面推断安全区、最小尺寸或自行重绘方式；尺寸、安全带与组合间距走上游资产实测运营规则（`references/logo-usage-rules.md`），不得表述为 Guide 条文 |
 | pp.6–21 typography specimens | 用有限字体家族建立完整层级；中英文、标题、数字、正文和标签保持角色分工 | 具体生产文件、CSS 字重、授权和回退栈仍由 `vi-guide` 核验 |
 | p.22 core identity | 正式身份材料围绕一个核心身份组织，不把 Logo 当装饰贴纸 | 不推断未记录的 lockup 参数 |
-| pp.23–25 auxiliary identities | 组合和方向是系统变量，必须从批准变体中选择，不临时拼装 | 没有完整机器可读的选择矩阵，不推断普遍渠道规则 |
+| pp.23–25 auxiliary identities | 组合和方向是系统变量，必须从批准变体中选择，不临时拼装 | 组合选择必须走上游授权矩阵（`references/logo-combination-matrix.md`、`assets/logo-combination-matrix.json`）；矩阵外的组合不推断、不补齐；渠道规则仍由 `vi-guide` 核验 |
 | p.26 type | 字体角色先于风格变化；通过字重、尺度、位置和留白建立层级 | 不把页面样本当作生产字体文件或许可证证明 |
 | p.27 phrase/context | 品牌短语是按 brief 调用的语义资产，不是每件物料必放的装饰 | 不从短语推导客户、产品或能力宣称 |
 | pp.28–29 color | 少量、明确角色的色彩系统比自由选色更可靠；颜色选择应服务结构、数据和流向 | 50/25/10/5 是整体视觉证据，不是自动组件配额；色值和角色以 `vi-guide` 为准 |
@@ -70,7 +70,7 @@
 - 品牌 token、Guide p.28 比例、无色彩中性色阶和字体证据。
 - 当前公开名称、命名限制、组合锁定和渠道应用批准。
 - route playbook、渠道安全区、claims/rights、export/QA 与 release verdict。
-- Guide 中未确认项目的数值、CSS 实现、最小尺寸和色彩转换。
+- Guide 中未确认项目的数值、CSS 实现和色彩转换；以及资产实测的 Logo 运营规则（上游 `references/logo-usage-rules.md` 的尺寸、安全带、组合间距与工艺禁用）——本层只转译方法，不复述数值，也不把两者混为一谈。
 
 ## 设计检查
 

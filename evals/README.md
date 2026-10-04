@@ -33,7 +33,7 @@ python3 evals/run_ab_benchmark.py --plan --out /tmp/ab   # A/B：出运行清单
 - 上游 VI Guide：`ARCHEBASE_VI_GUIDE` → Skill 目录/上级目录/上上级目录 → `$HOME` → `$HOME/Books` 下的 `archebase-vi-guide`；
 - Design IR store：`ARCHEBASE_DESIGN_IR` → `archebase-design-workspace/ir`（当前布局）→ `archebase-design-ir`（兼容旧布局）→ 按 pin clone `https://github.com/archebase/archebase-design-workspace`（**内部仓库，需访问权限**）；身份（commit）见 `skill-dependencies.json` 的 `design-ir-store`；索引是构建产物，先跑 `ir/build_index.py`。无权限或不可达时本脚本按 `待确认` 退出 2——品牌事实检查与路由检查不依赖 store，可照常运行。
 
-**上游身份必须核对**：本地 clone 只是缓存。候选目录必须完整（`SKILL.md`、`tokens/archebase.tokens.json`、`assets/guide-evidence.json`、`references/visual-grammar.md`、`references/asset-governance.md`），并且 `git rev-parse HEAD` 等于 `skill-dependencies.json` 里 `archebase-vi-guide` 的 pin；解析器会优先选身份与 pin 一致的候选，避免同机上的旧副本被当成权威。身份不一致或不可核对时 `check_brand_facts.py` 按 `待确认` 退出 2（`--allow-unpinned` 可继续做参考比较，结果只能视为待确认）；若上游副本连批准公开名称都读不出来，同样按上游不可用退出 2，而不是判本 Skill 有分歧。
+**上游身份必须核对**：本地 clone 只是缓存。候选目录必须完整（`SKILL.md`、`tokens/archebase.tokens.json`、`assets/guide-evidence.json`、`references/visual-grammar.md`、`references/asset-governance.md`、`references/logo-usage-rules.md`、`references/logo-combination-matrix.md`），并且 `git rev-parse HEAD` 等于 `skill-dependencies.json` 里 `archebase-vi-guide` 的 pin；解析器会优先选身份与 pin 一致的候选，避免同机上的旧副本被当成权威。最后两项只存在于 `v3.5.5`/`v3.5.10` 及之后，因此更早的副本会因缺文件被判身份不符而不是被当成权威。身份不一致或不可核对时 `check_brand_facts.py` 按 `待确认` 退出 2（`--allow-unpinned` 可继续做参考比较，结果只能视为待确认）；若上游副本连批准公开名称都读不出来，同样按上游不可用退出 2，而不是判本 Skill 有分歧。
 
 解析不到时报 `待确认` 并以退出码 2 停止——不得用记忆或臆造数据替代。可用 `--upstream` / `--skill` / `--store` / `--cases` 显式覆盖。
 
@@ -47,7 +47,10 @@ python3 evals/run_ab_benchmark.py --plan --out /tmp/ab   # A/B：出运行清单
 - **上游有、本 Skill 缺或错**：五色 token 与色值的配对、色板“只有五个 token 且无白色 token”的声明、色彩比例（`AB_BLUE_1` 50%、`AB_BLUE_2` 25%、`AB_BLUE_3` 10%、`AB_BLUE_4` 5%，标注合计 90%，剩余 10% 未指派——上游 `assets/guide-evidence.json` id `color.ratio`，Guide p.28）、中性档位（`#1E2124` 背景 100%/5%、文字 100%/70%/50%——上游 id `neutral.background`，Guide pp.30-31；id `neutral.text`，Guide p.32）、字体族与展示字重（上游 `tokens/archebase.tokens.json` 的 `type`；id `typography.specimens`，Guide pp.6/10/14/26）、批准公开名称（上游 `references/asset-governance.md:126`；id `naming.examples`，Guide pp.33-36）。
 - **比例重分配**：任何文件里 `AB_BLUE_n` 附近的百分数与上游不符。
 - **引用可追溯**：`id`/`evidence` 引用的 evidence id 必须存在于上游；引用行的页码必须落在该证据的 Guide 页码内。
-- **上游 待确认 项被臆造**：Logo 安全区/最小尺寸的数值断言（未标 `待确认`）——上游 `tokens/archebase.tokens.json` 的 `unconfirmed`（`logo_clear_space`、`logo_minimum_size`）与 `references/logo-asset-resolver.md:45`。
+- **Logo 度量必须有来源**：出现 Logo 尺寸/安全带/间距类数值（px/mm/× 图形标）的行必须同时指到上游运营规则文件（`references/logo-usage-rules.md`、`references/logo-combination-matrix.md`），否则判 FAIL；仍写明 `待确认` 的行按待确认放行。
+- **运营规则不得冒充 Guide 条文**：把资产实测规则写成「VI Guide 规定」或用 Guide 页码佐证的行判 FAIL（上游 `assets/guide-evidence.json` 的 `operational_rules.must_not_claim`）；否定表述（不得/不是/未定义）按正确用法放行。Guide 本身仍未定义安全区与最小尺寸（上游 `tokens/archebase.tokens.json` 的 `unconfirmed`：`logo_clear_space`、`logo_minimum_size`）。
+- **第 6 个色值**：`黑色渐变` 与 Guide 证据并列且没有否定说明判 FAIL——Guide `logo.forms` 只列 5 种形式，该色值是 owner 签发的本地增补。
+- **上游运营规则签发状态**：规则文件标题与 `assets/guide-evidence.json` 的 `operational_rules.status` 不一致时报 WARN；本 Skill 只记录该差异，不替上游裁定签发状态。
 - **公开名称写法**：未批准写法（大小写错误、全大写独立出现、加空格/连字符/下划线、`AI` 后缀等）判 FAIL；否定语句里列举的示例不算声明，URL、路径、环境变量（`ARCHEBASE_DESIGN_IR` 等）与技术标识不误判。
 
 不能检测（已确认的边界，不要据此声称更宽的一致性）：

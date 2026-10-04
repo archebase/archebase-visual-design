@@ -29,6 +29,10 @@ UPSTREAM_REQUIRED = (
     'assets/guide-evidence.json',
     'references/visual-grammar.md',
     'references/asset-governance.md',
+    # v3.5.5/v3.5.10 起才有：资产实测的 Logo 运营规则与授权组合矩阵。
+    # 列入完整性门槛后，v3.5.4 及更早的本地副本会因缺文件被判身份不符，而不是被当成权威。
+    'references/logo-usage-rules.md',
+    'references/logo-combination-matrix.md',
 )
 SCAN_SUFFIXES = ('.md', '.json', '.yaml', '.yml')
 
@@ -44,9 +48,17 @@ NAME_ASSERTION = re.compile(r'(公开名称|批准名称|public\s+name)[^。\n]{
 EVIDENCE_REF = re.compile(r'\b(?:id|evidence)\s+`([A-Za-z][A-Za-z0-9_.-]*)`')
 PAGES = re.compile(r'\bp{1,2}\.\s*([0-9][0-9,、/\-]*)')
 LOGO_WORD = r'(?:logo|标志|图形标|clear\s?space|minimum\s+size|最小尺寸)'
-METRIC = r'[0-9]+(?:\.[0-9]+)?\s?(?:px|mm|dp|pt|em)'
+METRIC = r'[0-9]+(?:\.[0-9]+)?\s?(?:px|mm|dp|pt|em|×\s*图形标)'
 # 只有与 Logo 语境同现的数值才算“臆造 Logo 度量”：印刷版心安全区、最小字号等不属于此
 LOGO_METRIC = re.compile(rf'(?:{LOGO_WORD}[^。\n]{{0,40}}{METRIC})|(?:{METRIC}[^。\n]{{0,40}}{LOGO_WORD})', re.I)
+# Logo 运营规则（资产实测，非 Guide 条文）：出现数值时必须在同一行指到上游规则文件
+OPERATING_REF = re.compile(r'references/logo-(?:usage-rules\.md|combination-matrix\.(?:md|json))')
+# 把资产实测规则写成 Guide 条文才算冒充；同一行是否定表述（不得/不是/未定义等）则不算
+GUIDE_DEFINES = re.compile(r'(?:VI\s*Guide|Guide)\s*(?:规定|定义|要求|明确|条文)|Guide\s*p{1,2}\.\s*[0-9]')
+ATTRIBUTION_NEGATED = re.compile(r'不得|禁止|不是|并非|未定义|而非|no Guide|not\s+defined', re.I)
+# 描述规则本身的行（例如「Guide 只列 5 种形式」「没有 Guide 页面证据」）不是冒充，也要放行
+COLOUR_NEGATED = re.compile(r'不得|禁止|不是|并非|而非|没有|只列|本地增补|owner\s*签发|签发范围|no Guide', re.I)
+SIXTH_COLOUR = '黑色渐变'
 CSS_WEIGHT = re.compile(r'font-weight\s*:?\s*[0-9]{3}')
 
 def add(status, item, expected, found, where=''):
@@ -138,6 +150,10 @@ def load_upstream(path):
         'evidence': by_id,
         'unconfirmed': tokens['unconfirmed'],
     }
+    rules_text = (path / 'references/logo-usage-rules.md').read_text(encoding='utf-8')
+    facts['operational'] = evidence.get('operational_rules') or {}
+    first_line = rules_text.splitlines()[0] if rules_text else ''
+    facts['operating_rules_header_signed'] = bool(re.search(r'已签发', first_line))
     name = re.search(r'approved public `([^`]+)`', governance)
     facts['approved_name'] = name.group(1) if name else None
     # 上游自洽性：visual-grammar 的 token 行必须与 tokens json 一致
@@ -396,12 +412,56 @@ def check_evidence_refs(docs, facts, rows):
                         f'{checked}/{len(seen)} 个引用的页码命中上游', ''))
 
 
-def check_unconfirmed(docs, rows):
+def check_logo_metrics(docs, facts, rows):
+    """Logo 度量：`v3.5.10` 起上游运营规则可被引用，但只能标为资产实测规则，不得冒充 Guide 条文。"""
     for rel, lines in sorted(docs.items()):
         for number, line in enumerate(lines, 1):
-            if LOGO_METRIC.search(line) and '待确认' not in line and 'do not infer' not in line.lower():
-                rows.append(add('FAIL', 'unconfirmed_logo_metric', 'Logo 安全区/最小尺寸在上游为 待确认',
-                                LOGO_METRIC.search(line).group(0), f'{rel}:{number}'))
+            match = LOGO_METRIC.search(line)
+            if not match:
+                continue
+            where = f'{rel}:{number}'
+            if OPERATING_REF.search(line):
+                rows.append(add('OK', 'logo_operating_rule', 'Logo 尺寸/安全带/间距类数值必须指到上游运营规则文件',
+                                f'已标注上游运营规则：{match.group(0)}', where))
+                continue
+            if '待确认' in line or 'do not infer' in line.lower():
+                continue
+            if GUIDE_DEFINES.search(line) and not ATTRIBUTION_NEGATED.search(line):
+                rows.append(add('FAIL', 'operating_rule_as_guide_fact',
+                                '资产实测的 Logo 运营规则不得表述为 VI Guide 规定',
+                                match.group(0), where))
+                continue
+            rows.append(add('FAIL', 'unconfirmed_logo_metric',
+                            'Logo 安全区/最小尺寸等数值必须标为上游运营规则或 待确认',
+                            match.group(0), where))
+
+
+def check_sixth_colour(docs, facts, rows):
+    """第 6 个色值 黑色渐变 是 owner 签发的本地增补，没有 Guide 页面证据（Guide logo.forms 只列 5 种形式）。"""
+    for rel, lines in sorted(docs.items()):
+        for number, line in enumerate(lines, 1):
+            if SIXTH_COLOUR not in line:
+                continue
+            if 'logo.forms' not in line and not GUIDE_DEFINES.search(line):
+                continue
+            if COLOUR_NEGATED.search(line):
+                continue
+            rows.append(add('FAIL', 'sixth_colour_as_guide_form',
+                            'Guide logo.forms 只列 5 种形式；黑色渐变无 Guide 页面证据',
+                            '该行把 黑色渐变 与 Guide 证据并列且没有否定说明', f'{rel}:{number}'))
+
+
+def check_operating_rule_status(facts, rows):
+    """上游自身的运营规则签发状态；不一致时本 Skill 只能按待确认保留，不得替上游裁定。"""
+    status = (facts.get('operational') or {}).get('status')
+    header_signed = facts.get('operating_rules_header_signed')
+    if status and header_signed and '待' in str(status):
+        rows.append(add('WARN', 'operating_rules_status', '上游运营规则签发状态应自洽',
+                        f'规则文件标题=已签发；assets/guide-evidence.json operational_rules.status={status}（本 Skill 不改写、不裁定）',
+                        'references/logo-usage-rules.md'))
+    elif status:
+        rows.append(add('OK', 'operating_rules_status', f'operational_rules.status={status}',
+                        '已记录', 'assets/guide-evidence.json'))
 
 
 # ---------------------------------------------------------------- output
@@ -498,7 +558,9 @@ def main():
     check_type(docs, facts, rows)
     check_name(docs, facts, rows)
     check_evidence_refs(docs, facts, rows)
-    check_unconfirmed(docs, rows)
+    check_logo_metrics(docs, facts, rows)
+    check_sixth_colour(docs, facts, rows)
+    check_operating_rule_status(facts, rows)
     if not identity_ok:
         rows.insert(0, add('WARN', 'upstream_identity', f'pin {pin_tag} / {pin_commit}',
                            f'本次使用 {identity_text}，结果只能视为待确认', str(upstream)))

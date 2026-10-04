@@ -60,7 +60,7 @@ record:
   excludes: [contracts, HR, finance, legal, operations, sales, unrelated_internal_documents]
   source:
     source_id: "src:archebase-vi-github"
-    locator: "archebase/archebase-vi-guide@918d0ec8f05f775d1f34370e0c38fc796da8b83b references/visual-grammar.md"
+    locator: "archebase/archebase-vi-guide@16b6e361fcd760bb8dc2c9b72e39debddaeecf54 references/visual-grammar.md"
     license: "proprietary"
     evidence_level: proposed
   conditions:

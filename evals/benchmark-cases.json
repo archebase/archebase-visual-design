@@ -6,8 +6,8 @@
   "protocol": "visual-guide-ab-benchmark.md",
   "upstream": {
     "repository": "https://github.com/archebase/archebase-vi-guide",
-    "tag": "v3.5.4",
-    "commit": "918d0ec8f05f775d1f34370e0c38fc796da8b83b"
+    "tag": "v3.5.10",
+    "commit": "16b6e361fcd760bb8dc2c9b72e39debddaeecf54"
   },
   "conditions": ["baseline_without_vi", "guided_with_vi"],
   "single_baseline": "条件 A 只有一条基线（同一模型/版本、同一输入文件与工具）；逐案配对，不得按案例更换基线。",

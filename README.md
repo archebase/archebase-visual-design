@@ -14,9 +14,11 @@ Design-method application layer for ArcheBase / 智域基石. `SKILL.md` is auth
 Official brand facts, assets, evidence, tokens, route playbooks, validators and release gates stay upstream:
 
 - Repository: https://github.com/archebase/archebase-vi-guide
-- Baseline: tag `v3.5.4`, commit `918d0ec8f05f775d1f34370e0c38fc796da8b83b`
+- Baseline: tag `v3.5.10`, commit `16b6e361fcd760bb8dc2c9b72e39debddaeecf54`
 
-Resolve it with `git clone --branch v3.5.4 https://github.com/archebase/archebase-vi-guide` and verify `git -C archebase-vi-guide rev-parse HEAD` against the commit above. This repository does not copy or redistribute upstream VI assets or evidence, and it is not itself a brand authority.
+Resolve it with `git clone --branch v3.5.10 https://github.com/archebase/archebase-vi-guide` and verify `git -C archebase-vi-guide rev-parse HEAD` against the commit above. This repository does not copy or redistribute upstream VI assets or evidence, and it is not itself a brand authority.
+
+The `v3.5.10` baseline adds two upstream documents this skill routes to but never restates: `references/logo-usage-rules.md` (asset-derived operating rules for Logo size, clear space, lockup spacing, size classes and print processes) and `references/logo-combination-matrix.md` (the authorised combination matrix, machine-readable as `assets/logo-combination-matrix.json`). Those numbers are measured from the approved V2 assets, not defined by the VI Guide, and must not be presented as Guide facts.
 
 Other declared dependencies are listed in `skill-dependencies.json`.
 
